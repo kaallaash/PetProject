@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthorizationService.DAL.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepository : IUserRepository<UserEntity>
 {
     private readonly DatabaseContext _db;
 

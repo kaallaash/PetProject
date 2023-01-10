@@ -2,19 +2,17 @@
 using AuthorizationService.BLL.Interfaces;
 using AuthorizationService.BLL.Models;
 using AuthorizationService.BLL.Models.Enums;
-using AuthorizationService.DAL;
 using AuthorizationService.DAL.Entities;
 using AuthorizationService.DAL.Interfaces.Repositories;
-using System.Diagnostics.Metrics;
 
 namespace AuthorizationService.BLL.Services;
 
-public class UserService : IUserService
+public class UserService : IUserService<User, int>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IUserRepository<UserEntity> _userRepository;
 
     public UserService(
-        IUserRepository userRepository)
+        IUserRepository<UserEntity> userRepository)
     {
         _userRepository = userRepository;
     }
@@ -72,7 +70,7 @@ public class UserService : IUserService
         await _userRepository.Delete(userEntity, cancellationToken);
     }
 
-    public async Task<User> Get(int id, CancellationToken cancellationToken)
+    public async Task<User?> GetById(int id, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetById(id, cancellationToken);
 
@@ -91,9 +89,27 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public async Task<List<User>> GetAll(CancellationToken cancellationToken)
+    public async Task<User> GetByEmail(string email, CancellationToken cancellationToken)
     {
-        //throw new NotImplementedException();
+        var user = await _userRepository.GetByEmail(email, cancellationToken);
+
+        if (user != null)
+        {
+            return new User()
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Name = user.Name,
+                Password = user.Password,
+                Role = (Role)(int)user.Role
+            };
+        }
+
+        throw new NotImplementedException();
+    }
+
+    public async Task<IEnumerable<User>> GetAll(CancellationToken cancellationToken)
+    {
         var userEntities = await _userRepository.GetAll(cancellationToken);
 
         var users = new List<User>();
