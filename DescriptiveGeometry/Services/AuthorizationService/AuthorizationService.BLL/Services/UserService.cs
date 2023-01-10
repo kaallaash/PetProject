@@ -1,8 +1,11 @@
 ﻿using AuthorizationService.BLL.Exceptions;
 using AuthorizationService.BLL.Interfaces;
 using AuthorizationService.BLL.Models;
+using AuthorizationService.BLL.Models.Enums;
+using AuthorizationService.DAL;
 using AuthorizationService.DAL.Entities;
 using AuthorizationService.DAL.Interfaces.Repositories;
+using System.Diagnostics.Metrics;
 
 namespace AuthorizationService.BLL.Services;
 
@@ -18,48 +21,99 @@ public class UserService : IUserService
 
     public async Task<User> Create(User user, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-        //var drawingEntities = await _drawingRepository.GetAll(cancellationToken);
+        var users = await _userRepository.GetAll(cancellationToken);
 
-        //if (drawingEntities.Any(d =>
-        //        d.Description?.Text == drawing.Description?.Text))
-        //{
-        //    throw new ArgumentException("Description already exists");
-        //}
+        if (users.Any(u => u.Email == user.Email))
+        {
+            throw new ArgumentException("Description already exists");
+        }
 
-        //var drawingEntity = _mapper.Map<DrawingEntity>(drawing);
-        //var createdDrawing = await _drawingRepository.Create(drawingEntity, cancellationToken);
+        var userEntity = new AuthorizationService.DAL.Entities.UserEntity()
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Name = user.Name,
+            Password = user.Password,
+            Role = (AuthorizationService.DAL.Entities.Enums.Role)(int)user.Role
+        };
 
-        //return _mapper.Map<Drawing>(createdDrawing);
+        var createdUser = await _userRepository.Create(userEntity, cancellationToken);
+
+        var userAfterMap = new User()
+        {
+            Id = createdUser.Id,
+            Email = createdUser.Email,
+            Name = createdUser.Name,
+            Password = createdUser.Password,
+            Role = (Role)(int)createdUser.Role
+        };
+
+        return userAfterMap;
     }
 
     public async Task Delete(int id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-        //var drawing = await _drawingRepository.GetById(id, cancellationToken);
+        var user = await _userRepository.GetById(id, cancellationToken);
 
-        //if (drawing is null)
-        //{
-        //    throw new NotFoundException("The drawing is not found");
-        //}
+        if (user is null)
+        {
+            throw new NotFoundException("The drawing is not found");
+        }
 
-        //await _drawingRepository.Delete(drawing, cancellationToken);
+        var userEntity = new AuthorizationService.DAL.Entities.UserEntity()
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Name = user.Name,
+            Password = user.Password,
+            Role = (AuthorizationService.DAL.Entities.Enums.Role)(int)user.Role
+        };
+
+        await _userRepository.Delete(userEntity, cancellationToken);
     }
 
     public async Task<User> Get(int id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-        //var drawing = await _drawingRepository.GetById(id, cancellationToken);
+        var user = await _userRepository.GetById(id, cancellationToken);
 
-        //return _mapper.Map<Drawing>(drawing);
+        if (user != null)
+        {
+            return new User()
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Name = user.Name,
+                Password = user.Password,
+                Role = (Role)(int)user.Role
+            };
+        }
+
+        throw new NotImplementedException();
     }
 
     public async Task<List<User>> GetAll(CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-        //var drawings = await _drawingRepository.GetAll(cancellationToken);
+        //throw new NotImplementedException();
+        var userEntities = await _userRepository.GetAll(cancellationToken);
 
-        //return _mapper.Map<List<Drawing>>(drawings); 
+        var users = new List<User>();
+
+        foreach (var userEntity in userEntities)
+        {
+            var user = new User()
+            {
+                Id = userEntity.Id,
+                Name = userEntity.Name,
+                Email = userEntity.Email,
+                Password = userEntity.Password,
+                Role = (Role)userEntity.Role
+            };
+
+            users.Add(user);
+        }
+
+        return users;
+        //return _mapper.Map<List<Drawing>>(drawings);
     }
 
     public async Task<User> Update(User user, CancellationToken cancellationToken)

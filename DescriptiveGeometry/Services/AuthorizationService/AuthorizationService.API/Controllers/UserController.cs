@@ -1,16 +1,18 @@
 using AuthorizationService.API.ViewModels;
 using AuthorizationService.BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthorizationService.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public class DrawingController : Controller
+public class UserController : Controller
 {
     private readonly IUserService _userService;
 
-    public DrawingController(
+    public UserController(
         IUserService userService)
     {
         _userService = userService;
@@ -32,11 +34,27 @@ public class DrawingController : Controller
     public async Task<IEnumerable<UserViewModel>> GetAll(
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-        //var drawings = await _userService
-        //    .GetAll(cancellationToken);
+        var users = await _userService
+            .GetAll(cancellationToken);
 
-        //return _mapper.Map<IEnumerable<DrawingViewModel>>(drawings); ;
+        var userViewModels = new List<UserViewModel>();
+
+        foreach (var user in users)
+        {
+            var userViewModel = new UserViewModel()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Password = user.Password,
+                Role = user.Role.ToString()
+            };
+
+            userViewModels.Add(userViewModel);
+        }
+
+        return userViewModels;
+        //return _mapper.Map<IEnumerable<DrawingViewModel>>(drawings);
     }
 
     [HttpPost]

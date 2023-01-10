@@ -1,6 +1,7 @@
-using AuthorizationService.API.ViewModels;
 using AuthorizationService.BLL.DI;
-//using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,20 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddUsers(builder.Configuration);
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -33,6 +48,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("CORSPolicy");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
