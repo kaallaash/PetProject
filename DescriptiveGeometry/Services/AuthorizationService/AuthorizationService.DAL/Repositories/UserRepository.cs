@@ -3,7 +3,7 @@ using AuthorizationService.DAL.Interfaces.Repositories;
 using AuthorizationService.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace AuthorizationService.DAL;
+namespace AuthorizationService.DAL.Repositories;
 
 public class UserRepository : IUserRepository
 {
@@ -31,15 +31,20 @@ public class UserRepository : IUserRepository
     {
         return await _db.Users
             .AsNoTracking()
-            //.Include(d => d.Description)
             .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+    }
+
+    public async Task<UserEntity?> GetByEmail(string email, CancellationToken cancellationToken)
+    {
+        return await _db.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
     }
 
     public async Task<IEnumerable<UserEntity>> GetAll(CancellationToken cancellationToken)
     {
         return await _db.Users
             .AsNoTracking()
-            //.Include(d => d.Description)
             .ToListAsync(cancellationToken);
     }
 

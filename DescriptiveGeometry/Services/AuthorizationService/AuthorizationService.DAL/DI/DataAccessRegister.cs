@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using AuthorizationService.DAL.Repositories;
 
 namespace AuthorizationService.DAL.DI;
 

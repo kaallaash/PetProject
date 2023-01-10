@@ -21,11 +21,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{4E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthorizationService", "AuthorizationService", "{A536DF17-568F-4F39-877B-4ECD5D7FCDC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationService.DAL", "Services\AuthorizationService\AuthorizationService.DAL\AuthorizationService.DAL.csproj", "{0653CC41-54AD-4E92-ADFA-D5D44285F92E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationService.DAL", "Services\AuthorizationService\AuthorizationService.DAL\AuthorizationService.DAL.csproj", "{0653CC41-54AD-4E92-ADFA-D5D44285F92E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationService.BLL", "Services\AuthorizationService\AuthorizationService.BLL\AuthorizationService.BLL.csproj", "{D7FC4144-926B-4577-8DFF-39703F974B01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationService.BLL", "Services\AuthorizationService\AuthorizationService.BLL\AuthorizationService.BLL.csproj", "{D7FC4144-926B-4577-8DFF-39703F974B01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationService.API", "Services\AuthorizationService\AuthorizationService.API\AuthorizationService.API.csproj", "{474A148A-6457-477B-82AF-FACD730638F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationService.API", "Services\AuthorizationService\AuthorizationService.API\AuthorizationService.API.csproj", "{474A148A-6457-477B-82AF-FACD730638F7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{E6F4A0FB-1CE3-4747-B76D-D30BDF924FFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DG.Core", "Core\DG.Core\DG.Core.csproj", "{A898D87F-6336-42AF-9B07-8B056A733F7C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DA805845-6091-4849-B650-3B500A8ECB5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +75,10 @@ Global
 		{474A148A-6457-477B-82AF-FACD730638F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{474A148A-6457-477B-82AF-FACD730638F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{474A148A-6457-477B-82AF-FACD730638F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A898D87F-6336-42AF-9B07-8B056A733F7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A898D87F-6336-42AF-9B07-8B056A733F7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A898D87F-6336-42AF-9B07-8B056A733F7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A898D87F-6336-42AF-9B07-8B056A733F7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +91,8 @@ Global
 		{0653CC41-54AD-4E92-ADFA-D5D44285F92E} = {A536DF17-568F-4F39-877B-4ECD5D7FCDC1}
 		{D7FC4144-926B-4577-8DFF-39703F974B01} = {A536DF17-568F-4F39-877B-4ECD5D7FCDC1}
 		{474A148A-6457-477B-82AF-FACD730638F7} = {A536DF17-568F-4F39-877B-4ECD5D7FCDC1}
+		{A898D87F-6336-42AF-9B07-8B056A733F7C} = {E6F4A0FB-1CE3-4747-B76D-D30BDF924FFE}
+		{DA805845-6091-4849-B650-3B500A8ECB5E} = {A536DF17-568F-4F39-877B-4ECD5D7FCDC1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {85FE5C50-598B-426F-BDCD-68BFB6CC7F9C}

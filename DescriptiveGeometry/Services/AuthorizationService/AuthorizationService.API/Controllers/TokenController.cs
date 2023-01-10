@@ -1,8 +1,6 @@
 ﻿using AuthorizationService.API.ViewModels;
 using AuthorizationService.BLL.Interfaces;
-using DG.DAL.Context;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -14,7 +12,7 @@ namespace AuthorizationService.API.Controllers;
 [ApiController]
 public class TokenController : Controller
 {
-    public IConfiguration _configuration;
+    private readonly IConfiguration _configuration;
     private readonly IUserService _userService;
 
     public TokenController(IConfiguration config, IUserService userService)
@@ -26,13 +24,14 @@ public class TokenController : Controller
     [HttpPost]
     public async Task<IActionResult> Post(UserViewModel userViewModel)
     {
-        if (userViewModel != null && userViewModel.Email != null && userViewModel.Password != null)
+        if (userViewModel is not null &&
+            !string.IsNullOrEmpty(userViewModel.Email) && 
+            !string.IsNullOrEmpty(userViewModel.Password))
         {
             var user = await GetUser(userViewModel.Email, userViewModel.Password);
 
-            if (user != null)
+            if (user is not null)
             {
-                //create claims details based on the user information
                 var claims = new[] {
                         new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
