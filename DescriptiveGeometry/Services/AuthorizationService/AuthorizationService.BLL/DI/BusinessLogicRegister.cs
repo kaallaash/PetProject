@@ -1,4 +1,5 @@
 ﻿using AuthorizationService.BLL.Interfaces;
+using AuthorizationService.BLL.Models;
 using AuthorizationService.BLL.Services;
 using AuthorizationService.DAL.DI;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +13,7 @@ public static class BusinessLogicRegister
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IUserService<User, int>, UserService>();
         services.AddDataContext(configuration);
     }
 }

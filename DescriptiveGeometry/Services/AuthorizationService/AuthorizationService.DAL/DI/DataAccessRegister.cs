@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using AuthorizationService.DAL.Repositories;
+using AuthorizationService.DAL.Entities;
 
 namespace AuthorizationService.DAL.DI;
 
@@ -14,7 +15,7 @@ public static class DataAccessRegister
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserRepository<UserEntity>, UserRepository>();
 
         services.AddDbContext<DatabaseContext>(op =>
         {

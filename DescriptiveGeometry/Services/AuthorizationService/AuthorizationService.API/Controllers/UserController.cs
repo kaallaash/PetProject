@@ -1,5 +1,7 @@
 using AuthorizationService.API.ViewModels;
 using AuthorizationService.BLL.Interfaces;
+using AuthorizationService.BLL.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,12 +12,15 @@ namespace AuthorizationService.API.Controllers;
 [Route("api/[controller]")]
 public class UserController : Controller
 {
-    private readonly IUserService _userService;
+    private readonly IUserService<User, int> _userService;
+    private readonly IMapper _mapper;
 
     public UserController(
-        IUserService userService)
+        IUserService<User, int> userService,
+        IMapper mapper)
     {
         _userService = userService;
+        _mapper = mapper;
     }
 
     [HttpGet("{id}")]
@@ -23,11 +28,10 @@ public class UserController : Controller
         int id,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-        //var drawing = await _userService
-        //    .Get(id, cancellationToken);
+        var user = await _userService
+            .GetById(id, cancellationToken);
 
-        //return _mapper.Map<DrawingViewModel>(drawing);
+        return _mapper.Map<UserViewModel>(user);
     }
 
     [HttpGet]
@@ -37,61 +41,41 @@ public class UserController : Controller
         var users = await _userService
             .GetAll(cancellationToken);
 
-        var userViewModels = new List<UserViewModel>();
-
-        foreach (var user in users)
-        {
-            var userViewModel = new UserViewModel()
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                Password = user.Password,
-                Role = user.Role.ToString()
-            };
-
-            userViewModels.Add(userViewModel);
-        }
-
-        return userViewModels;
-        //return _mapper.Map<IEnumerable<DrawingViewModel>>(drawings);
+        return _mapper.Map<IEnumerable<UserViewModel>>(users);
     }
 
     [HttpPost]
     public async Task<UserViewModel> Create(
-        [FromBody] ChangeUserViewModel changeDrawingViewModel,
+        [FromBody] ChangeUserViewModel changeUserViewModel,
         CancellationToken cancellationToken)
     {
-
-        throw new NotImplementedException();
         //await _changeDrawingViewModelValidator
         //    .ValidateAndThrowAsync(changeDrawingViewModel, cancellationToken);
 
-        //var drawingModel = _mapper.Map<Drawing>(changeDrawingViewModel);
+        var userModel = _mapper.Map<User>(changeUserViewModel);
 
-        //var drawing = await _userService
-        //    .Create(drawingModel, cancellationToken);
+        var user = await _userService
+            .Create(userModel, cancellationToken);
 
-        //return _mapper.Map<DrawingViewModel>(drawing);
+        return _mapper.Map<UserViewModel>(user);
     }
 
     [HttpPut("{id}")]
     public async Task<UserViewModel> Update(
         int id,
-        [FromBody] ChangeUserViewModel changeDrawingViewModel,
+        [FromBody] ChangeUserViewModel changeUserViewModel,
       CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
         //await _changeDrawingViewModelValidator
         //    .ValidateAndThrowAsync(changeDrawingViewModel, cancellationToken);
 
-        //var drawingModel = _mapper.Map<Drawing>(changeDrawingViewModel);
-        //drawingModel.Id = id;
+        var userModel = _mapper.Map<User>(changeUserViewModel);
+        userModel.Id = id;
 
-        //var result = await _userService
-        //    .Update(drawingModel, cancellationToken);
+        var result = await _userService
+            .Update(userModel, cancellationToken);
 
-        //return _mapper.Map<DrawingViewModel>(result);
+        return _mapper.Map<UserViewModel>(result);
     }
 
     [HttpDelete("{id}")]

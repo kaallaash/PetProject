@@ -1,5 +1,8 @@
 ﻿using AuthorizationService.API.ViewModels;
 using AuthorizationService.BLL.Interfaces;
+using AuthorizationService.BLL.Models;
+using AuthorizationService.DAL.Entities;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,16 +16,18 @@ namespace AuthorizationService.API.Controllers;
 public class TokenController : Controller
 {
     private readonly IConfiguration _configuration;
-    private readonly IUserService _userService;
+    private readonly IUserService<User, int> _userService;
+    private readonly IMapper _mapper;
 
-    public TokenController(IConfiguration config, IUserService userService)
+    public TokenController(IConfiguration config, IUserService<User, int> userService, IMapper mapper)
     {
         _configuration = config;
         _userService = userService;
+        _mapper = mapper;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(UserViewModel userViewModel)
+    public async Task<IActionResult> Post(LoginViewModel userViewModel)
     {
         if (userViewModel is not null &&
             !string.IsNullOrEmpty(userViewModel.Email) && 
@@ -36,10 +41,7 @@ public class TokenController : Controller
                         new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]),
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                         new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                        new Claim("Id", user.Id.ToString()),
-                        new Claim("Name", user.Name),
-                        new Claim("Email", user.Email),
-                        new Claim("Role", user.Role)
+                        new Claim("Email", user.Email)
                     };
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -64,25 +66,11 @@ public class TokenController : Controller
         }
     }
 
-    private async Task<UserViewModel> GetUser(string email, string password)
+    private async Task<LoginViewModel?> GetUser(string email, string password)
     {
         var users = await _userService.GetAll(default);
         var user = users.FirstOrDefault(u => u.Email == email && u.Password == password);
-
-        if (user == null)
-        {
-            return null;
-        }
-
-        var userViewModel = new UserViewModel()
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            Password = user.Password,
-            Role = user.Role.ToString()
-        };
         
-        return userViewModel;
+        return user is not null ? _mapper.Map<LoginViewModel>(user) : null;
     }
 }
