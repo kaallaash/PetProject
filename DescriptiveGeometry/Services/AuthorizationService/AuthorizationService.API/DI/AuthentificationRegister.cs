@@ -1,14 +1,10 @@
-﻿using AuthorizationService.BLL.Interfaces;
-using AuthorizationService.BLL.Models;
-using AuthorizationService.BLL.Services;
-using AuthorizationService.DAL.DI;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 namespace AuthorizationService.API.DI;
 
-public static class AuthentificationAuthentification
+public static class AuthentificationRegister
 {
     public static void AddAuthentication(
         this IServiceCollection services,

@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\DG.DAL\DG.DAL.csproj" />
     <ProjectReference Include="..\AuthorizationService.BLL\AuthorizationService.BLL.csproj" />
   </ItemGroup>
 

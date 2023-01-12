@@ -1,3 +1,6 @@
+//using AuthorizationService.API.DI;
+//using AuthorizationService.BLL.DI;
+using AuthorizationService.API.DI;
 using DG.API.Validators;
 using DG.API.ViewModels;
 using DG.BLL.DI;
@@ -25,6 +28,8 @@ builder.Services
     .AddAutoMapper(typeof(DG.API.AutoMapper.MappingProfile), typeof(DG.BLL.AutoMapper.MappingProfile));
 builder.Services.AddScoped<IValidator<ChangeDrawingViewModel>, ChangeDrawingViewModelValidator>();
 
+builder.Services.AddAuthentication(builder.Configuration);
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -37,6 +42,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("CORSPolicy");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
