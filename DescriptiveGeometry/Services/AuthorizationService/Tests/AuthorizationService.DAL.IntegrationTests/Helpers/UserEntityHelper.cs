@@ -1,5 +1,4 @@
 ﻿using AuthorizationService.DAL.Entities;
-using System.Xml.Linq;
 using AuthorizationService.DAL.Entities.Enums;
 
 namespace AuthorizationService.DAL.IntegrationTests.Helpers;
