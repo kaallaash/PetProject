@@ -33,11 +33,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DG.Core", "Core\DG.Core\DG.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DA805845-6091-4849-B650-3B500A8ECB5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationService.API.Tests", "Services\AuthorizationService\Tests\AuthorizationService.API.Tests\AuthorizationService.API.Tests.csproj", "{277F2C96-FD5A-4B30-B893-EF996BDD0F02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationService.API.Tests", "Services\AuthorizationService\Tests\AuthorizationService.API.Tests\AuthorizationService.API.Tests.csproj", "{277F2C96-FD5A-4B30-B893-EF996BDD0F02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationService.BLL.Tests", "Services\AuthorizationService\Tests\AuthorizationService.BLL.Tests\AuthorizationService.BLL.Tests.csproj", "{891913A3-9F9A-40E1-906E-985369F9D10D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationService.BLL.Tests", "Services\AuthorizationService\Tests\AuthorizationService.BLL.Tests\AuthorizationService.BLL.Tests.csproj", "{891913A3-9F9A-40E1-906E-985369F9D10D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationService.DAL.IntegrationTests", "Services\AuthorizationService\Tests\AuthorizationService.DAL.IntegrationTests\AuthorizationService.DAL.IntegrationTests.csproj", "{44ECF2CC-9849-4407-9710-29A9AF8D2A42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationService.DAL.IntegrationTests", "Services\AuthorizationService\Tests\AuthorizationService.DAL.IntegrationTests\AuthorizationService.DAL.IntegrationTests.csproj", "{44ECF2CC-9849-4407-9710-29A9AF8D2A42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DG.Core.Tests", "Core\DG.Core.Tests\DG.Core.Tests.csproj", "{B52C2B31-CC08-47CF-B5D2-F80877F8CEF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +99,10 @@ Global
 		{44ECF2CC-9849-4407-9710-29A9AF8D2A42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44ECF2CC-9849-4407-9710-29A9AF8D2A42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44ECF2CC-9849-4407-9710-29A9AF8D2A42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B52C2B31-CC08-47CF-B5D2-F80877F8CEF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B52C2B31-CC08-47CF-B5D2-F80877F8CEF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B52C2B31-CC08-47CF-B5D2-F80877F8CEF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B52C2B31-CC08-47CF-B5D2-F80877F8CEF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,6 +120,7 @@ Global
 		{277F2C96-FD5A-4B30-B893-EF996BDD0F02} = {DA805845-6091-4849-B650-3B500A8ECB5E}
 		{891913A3-9F9A-40E1-906E-985369F9D10D} = {DA805845-6091-4849-B650-3B500A8ECB5E}
 		{44ECF2CC-9849-4407-9710-29A9AF8D2A42} = {DA805845-6091-4849-B650-3B500A8ECB5E}
+		{B52C2B31-CC08-47CF-B5D2-F80877F8CEF6} = {E6F4A0FB-1CE3-4747-B76D-D30BDF924FFE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {85FE5C50-598B-426F-BDCD-68BFB6CC7F9C}
