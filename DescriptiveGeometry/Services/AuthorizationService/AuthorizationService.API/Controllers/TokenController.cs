@@ -1,7 +1,6 @@
 ﻿using AuthorizationService.API.ViewModels;
 using AuthorizationService.BLL.Interfaces;
 using AuthorizationService.BLL.Models;
-using AuthorizationService.DAL.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;

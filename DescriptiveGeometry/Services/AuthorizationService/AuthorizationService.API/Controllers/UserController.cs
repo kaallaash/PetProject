@@ -49,9 +49,6 @@ public class UserController : Controller
         [FromBody] ChangeUserViewModel changeUserViewModel,
         CancellationToken cancellationToken)
     {
-        //await _changeDrawingViewModelValidator
-        //    .ValidateAndThrowAsync(changeDrawingViewModel, cancellationToken);
-
         var userModel = _mapper.Map<User>(changeUserViewModel);
 
         var user = await _userService
@@ -66,9 +63,6 @@ public class UserController : Controller
         [FromBody] ChangeUserViewModel changeUserViewModel,
       CancellationToken cancellationToken)
     {
-        //await _changeDrawingViewModelValidator
-        //    .ValidateAndThrowAsync(changeDrawingViewModel, cancellationToken);
-
         var userModel = _mapper.Map<User>(changeUserViewModel);
         userModel.Id = id;
 

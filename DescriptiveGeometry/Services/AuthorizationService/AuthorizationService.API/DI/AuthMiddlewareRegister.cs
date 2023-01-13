@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AuthorizationService.API.DI;
 
-public static class AuthentificationRegister
+public static class AuthMiddlewareRegister
 {
     public static void AddAuthentication(
         this IServiceCollection services,

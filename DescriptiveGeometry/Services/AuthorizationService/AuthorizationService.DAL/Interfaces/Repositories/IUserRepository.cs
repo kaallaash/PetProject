@@ -1,5 +1,4 @@
-﻿using AuthorizationService.DAL.Entities;
-using DG.Core.Repositories;
+﻿using DG.Core.Repositories;
 
 namespace AuthorizationService.DAL.Interfaces.Repositories;
 

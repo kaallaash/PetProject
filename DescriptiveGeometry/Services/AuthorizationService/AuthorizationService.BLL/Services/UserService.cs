@@ -1,7 +1,6 @@
 ﻿using AuthorizationService.BLL.Exceptions;
 using AuthorizationService.BLL.Interfaces;
 using AuthorizationService.BLL.Models;
-using AuthorizationService.BLL.Models.Enums;
 using AuthorizationService.DAL.Entities;
 using AuthorizationService.DAL.Interfaces.Repositories;
 using AutoMapper;
