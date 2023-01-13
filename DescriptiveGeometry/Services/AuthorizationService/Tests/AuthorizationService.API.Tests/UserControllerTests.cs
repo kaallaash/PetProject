@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using static AuthorizationService.API.Tests.Entities.TestUserEntity;
 using static AuthorizationService.API.Tests.ViewModels.TestUserViewModel;
 using static AuthorizationService.API.Tests.Constants.ApiTestsConstants;
-using Microsoft.AspNetCore.Authorization;
 
 namespace AuthorizationService.API.Tests;
 
@@ -51,9 +50,6 @@ public class UserControllerTests
 
         var jsonUserViewModel = JsonConvert.SerializeObject(ValidChangeUserViewModel);
         var contentUserViewModel = new StringContent(jsonUserViewModel, Encoding.UTF8, "application/json");
-
-        //var actualAttribute = application.Services.GetType().GetMethod("Create").GetCustomAttributes(typeof(AuthorizeAttribute), true);
-        //var actualAttribute = application.Services.GetType().GetMethod("Create").GetCustomAttributes(typeof(InterceptAttribute), true);
 
         var response = await client.PostAsync(UserPath, contentUserViewModel);
         var responseUserViewModel = await response.Content.ReadAsAsync<UserViewModel>();

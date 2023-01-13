@@ -1,5 +1,4 @@
-﻿using AuthorizationService.BLL.Models;
-using DG.Core.Services;
+﻿using DG.Core.Services;
 
 namespace AuthorizationService.BLL.Interfaces;
 
