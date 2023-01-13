@@ -1,4 +1,4 @@
-﻿using DG.DAL.Context;
+﻿using AuthorizationService.DAL.Context;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -8,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authorization.Policy;
 using DG.Core.Tests.FakePolicy;
 
-namespace DG.API.Tests;
+namespace AuthorizationService.API.Tests;
 
-internal class DrawingApi : WebApplicationFactory<Program>
+internal class UserApi : WebApplicationFactory<Program>
 {
     protected override IHost CreateHost(IHostBuilder builder)
     {

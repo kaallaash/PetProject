@@ -1,5 +1,3 @@
-//using AuthorizationService.API.DI;
-//using AuthorizationService.BLL.DI;
 using AuthorizationService.API.DI;
 using DG.API.Validators;
 using DG.API.ViewModels;
