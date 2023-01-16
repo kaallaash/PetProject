@@ -39,5 +39,5 @@ jobs:
         run: |
            dotnet-sonarscanner begin /k:"nantonov_BE" /o:"nantonov" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx" /d:sonar.coverage.exclusions="${{ env.EXCLUDE_FROM_COVERAGE }}"
            dotnet build DescriptiveGeometry/ --configuration Debug
-           dotnet test DescriptiveGeometry/ --no-restore --no-build --configuration Debug --verbosity normal --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover -o="**/TestResults/**/coverage.opencover.xml"
+           dotnet test DescriptiveGeometry/ --no-restore --no-build --configuration Debug --verbosity normal --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover -o 'coverage.xml'
            dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
