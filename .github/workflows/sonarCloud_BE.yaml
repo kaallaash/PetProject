@@ -33,7 +33,7 @@ jobs:
 
       - name: Build and analyze
         env:
-          EXCLUDE_FROM_COVERAGE: "**/Migrations/**/*, program.cs"
+          EXCLUDE_FROM_COVERAGE: "**/Migrations/**/*, **/Program.cs"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
