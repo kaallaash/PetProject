@@ -2,7 +2,7 @@
 
 namespace AuthorizationService.API.Tests.Helpers;
 
-public static class UserModelHelper
+public static class UserViewModelHelper
 {
     public static ChangeUserViewModel CreateChangeUserViewModel(int id) => new ChangeUserViewModel()
     {
@@ -10,7 +10,7 @@ public static class UserModelHelper
         Email = $"Email{id}",
         Password = $"password{id}"
     };
-
+    
     public static UserViewModel CreateUserViewModel(int id) => new UserViewModel()
     {
         Id = id,

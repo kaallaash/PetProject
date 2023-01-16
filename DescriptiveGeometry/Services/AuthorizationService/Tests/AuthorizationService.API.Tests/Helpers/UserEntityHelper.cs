@@ -9,8 +9,8 @@ public static class UserEntityHelper
     {
         Id = id,
         Name = $"Name{id}",
-        Email = $"Name{id}",
-        Password = $"Name{id}",
+        Email = $"Email{id}",
+        Password = $"Password{id}",
         Role = Role.DefaultUser
     };
 }
