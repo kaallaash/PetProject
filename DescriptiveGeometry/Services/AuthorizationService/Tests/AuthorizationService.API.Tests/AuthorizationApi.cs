@@ -10,7 +10,7 @@ using DG.Core.Tests.FakePolicy;
 
 namespace AuthorizationService.API.Tests;
 
-internal class UserApi : WebApplicationFactory<Program>
+internal class AuthorizationApi : WebApplicationFactory<Program>
 {
     protected override IHost CreateHost(IHostBuilder builder)
     {
