@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DG.BLL\DG.BLL.csproj" />
+    <ProjectReference Include="..\Services\AuthorizationService\AuthorizationService.API\AuthorizationService.API.csproj" />
     <InternalsVisibleTo Include="DG.API.Tests" />
   </ItemGroup>
 

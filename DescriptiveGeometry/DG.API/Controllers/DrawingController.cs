@@ -3,12 +3,15 @@ using DG.API.ViewModels;
 using DG.BLL.Interfaces;
 using DG.BLL.Models;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DG.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
+
 public class DrawingController : Controller
 {
     private readonly IDrawingService _drawingService;
