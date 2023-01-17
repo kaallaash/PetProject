@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using Xunit;
 using static DG.DAL.IntegrationTests.Entities.TestDrawingEntity;
+using DG.DAL.Models;
 
 namespace DG.DAL.IntegrationTests;
 
@@ -55,6 +56,37 @@ public class DrawingRepositoryIntegrationTests : IDisposable
         actualDrawing.ShouldBeNull();
     }
 
+    [Theory]
+    [MemberData(nameof(GetValidPageParameters), MemberType = typeof(TestDrawingEntity))]
+    public async Task GetByParameters_ValidParameters_ReturnsDrawingEntities(PageParameters pageParameters)
+    {
+        await AddAsync(_context, GetValidDrawingEntitiesWithId());
+
+        var position = (pageParameters.PageNumber - 1) * pageParameters.PageSize;
+
+        var createdDrawingEntities = await _context.Drawings
+            .AsNoTracking()
+            .Include(d => d.Description)
+            .Skip(position)
+            .Take(pageParameters.PageSize)
+            .ToListAsync(default);
+
+        var drawingCount = await _context.Drawings.CountAsync(default);
+        var totalPage = drawingCount % pageParameters.PageSize == 0 ?
+            drawingCount / pageParameters.PageSize :
+            (drawingCount / pageParameters.PageSize) + 1;
+        var createdPageList = new PagedList<DrawingEntity>(createdDrawingEntities, totalPage);
+
+        createdPageList.Collection.ShouldNotBeNull();
+
+        var actualPageList =
+            await _drawingRepository.GetByParameters(pageParameters, default);
+
+        actualPageList.ShouldNotBeNull();
+        actualPageList.TotalPages.ShouldBe(createdPageList.TotalPages);
+        actualPageList.Collection?.Count().ShouldBe(createdPageList.Collection.Count());
+    }
+
     [Fact]
     public async Task GetAll_ReturnsDrawingEntities()
     {
@@ -92,7 +124,7 @@ public class DrawingRepositoryIntegrationTests : IDisposable
         var actualDrawing = await _drawingRepository.Update(updatedDrawingEntity, default);
 
         actualDrawing.ShouldNotBeNull();
-        actualDrawing.DownloadsCount.ShouldBe(updatedDrawingEntity.DownloadsCount);        
+        actualDrawing.DownloadsCount.ShouldBe(updatedDrawingEntity.DownloadsCount);
     }
 
     [Theory]
