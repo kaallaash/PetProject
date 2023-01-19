@@ -11,17 +11,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.11
+          distribution: 'temurin'
+          java-version: '17'
+          check-latest: true
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: Cache SonarCloud packages
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
@@ -31,7 +33,7 @@ jobs:
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         run: dotnet tool install --global dotnet-sonarscanner
 
-      - name: Build and analyze
+      - name: Build, test and analyze
         env:
           EXCLUDE_FROM_COVERAGE: "**/Migrations/**/*, **/Program.cs"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
