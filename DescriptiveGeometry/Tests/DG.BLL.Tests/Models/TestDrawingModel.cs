@@ -5,9 +5,9 @@ namespace DG.BLL.Tests.Models;
 
 public static class TestDrawingModel
 {
-    public static Drawing ValidDrawingModel = DrawingModelHelper.Create(1);
+    public static Drawing GetValidDrawingModel => DrawingModelHelper.Create(1);
 
-    public static IEnumerable<Drawing> ValidDrawingModels = new List<Drawing>()
+    public static IEnumerable<Drawing> GetValidDrawingModels => new List<Drawing>()
     {
         DrawingModelHelper.Create(1),
         DrawingModelHelper.Create(2),

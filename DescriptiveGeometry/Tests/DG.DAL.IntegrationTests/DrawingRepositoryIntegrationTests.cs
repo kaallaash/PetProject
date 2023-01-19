@@ -13,7 +13,7 @@ namespace DG.DAL.IntegrationTests;
 
 public class DrawingRepositoryIntegrationTests : IDisposable
 {
-    private readonly IDrawingRepository _drawingRepository;
+    private readonly IDrawingRepository<DrawingEntity> _drawingRepository;
     private readonly DatabaseContext _context;
 
     public DrawingRepositoryIntegrationTests()
@@ -58,33 +58,39 @@ public class DrawingRepositoryIntegrationTests : IDisposable
 
     [Theory]
     [MemberData(nameof(GetValidPageParameters), MemberType = typeof(TestDrawingEntity))]
-    public async Task GetByParameters_ValidParameters_ReturnsDrawingEntities(PageParameters pageParameters)
+    public async Task GetByParameters_ValidParameters_ReturnsDrawingEntities(SearchParameters pageParameters)
     {
         await AddAsync(_context, GetValidDrawingEntitiesWithId());
-
-        var position = (pageParameters.PageNumber - 1) * pageParameters.PageSize;
 
         var createdDrawingEntities = await _context.Drawings
             .AsNoTracking()
             .Include(d => d.Description)
-            .Skip(position)
-            .Take(pageParameters.PageSize)
+            .Skip(pageParameters.Skip)
+            .Take(pageParameters.Take)
             .ToListAsync(default);
 
-        var drawingCount = await _context.Drawings.CountAsync(default);
-        var totalPage = drawingCount % pageParameters.PageSize == 0 ?
-            drawingCount / pageParameters.PageSize :
-            (drawingCount / pageParameters.PageSize) + 1;
-        var createdPageList = new PagedList<DrawingEntity>(createdDrawingEntities, totalPage);
+        var totalPages = await _context.Drawings
+            .AsNoTracking().CountAsync(default);
 
-        createdPageList.Collection.ShouldNotBeNull();
-
-        var actualPageList =
+        var actualPagedList =
             await _drawingRepository.GetByParameters(pageParameters, default);
 
-        actualPageList.ShouldNotBeNull();
-        actualPageList.TotalPages.ShouldBe(createdPageList.TotalPages);
-        actualPageList.Collection?.Count().ShouldBe(createdPageList.Collection.Count());
+        var actualDrawingEntitiesArray = actualPagedList.Collection?.ToArray();
+        var createdDrawingEntitiesArray = createdDrawingEntities.ToArray();
+
+        actualPagedList.TotalPages.ShouldBe(totalPages);
+        actualDrawingEntitiesArray.ShouldNotBeNull();
+        actualDrawingEntitiesArray.Length.ShouldBe(createdDrawingEntities.Count);
+        actualDrawingEntitiesArray.Length.ShouldBe(createdDrawingEntities.Count);
+
+        for (var i = 0; i < createdDrawingEntitiesArray.Length; i++)
+        {
+            actualDrawingEntitiesArray[i].Id.ShouldBe(createdDrawingEntitiesArray[i].Id);
+            actualDrawingEntitiesArray[i].DrawingPhotoLink.ShouldBe(createdDrawingEntitiesArray[i].DrawingPhotoLink);
+            actualDrawingEntitiesArray[i].Description?.DescriptionPhotoLink.ShouldBe(createdDrawingEntitiesArray[i]?.Description?.DescriptionPhotoLink);
+            actualDrawingEntitiesArray[i].Description?.Points.ShouldBe(createdDrawingEntitiesArray[i]?.Description?.Points);
+            actualDrawingEntitiesArray[i].Description?.Text.ShouldBe(createdDrawingEntitiesArray[i]?.Description?.Text);
+        }
     }
 
     [Fact]

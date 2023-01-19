@@ -1,4 +1,5 @@
-﻿namespace DG.DAL.Entities;
+﻿namespace DG.Core.Models;
+
 public class PagedList<T>
 {
     public IEnumerable<T>? Collection { get; set; }

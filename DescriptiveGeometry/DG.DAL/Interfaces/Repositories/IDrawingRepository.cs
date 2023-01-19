@@ -1,15 +1,12 @@
-﻿using DG.DAL.Entities;
+﻿using DG.Core.Models;
+using DG.Core.Repositories;
+using DG.DAL.Entities;
 using DG.DAL.Models;
 
 namespace DG.DAL.Interfaces.Repositories;
-public interface IDrawingRepository
+public interface IDrawingRepository<T1> : IBaseCrudRepository<T1>
 {
-    Task<IEnumerable<DrawingEntity>> GetAll(CancellationToken cancellationToken);
-    Task<DrawingEntity?> GetById(int id, CancellationToken cancellationToken);
-    Task<PagedList<DrawingEntity>> GetByParameters(
-        PageParameters pageParameters,
+    Task<PagedList<T1>> GetByParameters(
+        SearchParameters parameters,
         CancellationToken cancellationToken);
-    Task<DrawingEntity> Create(DrawingEntity drawing, CancellationToken cancellationToken);
-    Task<DrawingEntity> Update(DrawingEntity drawing, CancellationToken cancellationToken);
-    Task Delete(DrawingEntity drawing, CancellationToken cancellationToken);
 }

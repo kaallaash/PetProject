@@ -24,16 +24,35 @@ public static class TestDrawingEntity
         DrawingEntityHelper.CreateValidEntityWithoutId()
     };
 
-    internal static IEnumerable<PageParameters> GetPageParameters()
+    internal static IEnumerable<SearchParameters> GetSearchParameters()
     {
-        return new List<PageParameters>()
+        return new List<SearchParameters>()
         {
-            new PageParameters(1,2),
-            new PageParameters(2,3),
-            new PageParameters(3,1),
-            new PageParameters(2,1),
-            new PageParameters(4,1),
-            new PageParameters(1,4)
+            new SearchParameters()
+            {
+                Skip = 0,
+                Take = 2
+            },
+            new SearchParameters()
+            {
+                Skip = 2,
+                Take = 3
+            },
+            new SearchParameters()
+            {
+                Skip = 3,
+                Take = 2
+            },
+            new SearchParameters()
+            {
+                Skip = 1,
+                Take = 2
+            },
+            new SearchParameters()
+            {
+                Skip = 3,
+                Take = 5
+            }
         };
     }
 
@@ -47,7 +66,7 @@ public static class TestDrawingEntity
 
     public static IEnumerable<object[]> GetValidPageParameters()
     {
-        foreach (var pageParameter in GetPageParameters())
+        foreach (var pageParameter in GetSearchParameters())
         {
             yield return new object[] { pageParameter };
         }

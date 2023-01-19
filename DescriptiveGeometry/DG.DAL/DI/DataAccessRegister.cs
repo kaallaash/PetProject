@@ -1,4 +1,5 @@
 ﻿using DG.DAL.Context;
+using DG.DAL.Entities;
 using DG.DAL.Interfaces.Repositories;
 using DG.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ public static class DataAccessRegister
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddScoped<IDrawingRepository, DrawingRepository>();
+        services.AddScoped<IDrawingRepository<DrawingEntity>, DrawingRepository>();
 
         services.AddDbContext<DatabaseContext>(op =>
         {

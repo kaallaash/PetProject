@@ -1,4 +1,5 @@
 ﻿using DG.BLL.Interfaces;
+using DG.BLL.Models;
 using DG.BLL.Services;
 using DG.DAL.DI;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +13,7 @@ public static class BusinessLogicRegister
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddScoped<IDrawingService, DrawingService>();
+        services.AddScoped<IDrawingService<Drawing, int>, DrawingService>();
         services.AddDataContext(configuration);
     }
 }

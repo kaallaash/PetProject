@@ -1,4 +1,5 @@
-﻿using DG.DAL.Context;
+﻿using DG.Core.Models;
+using DG.DAL.Context;
 using DG.DAL.Entities;
 using DG.DAL.Interfaces.Repositories;
 using DG.DAL.Models;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DG.DAL.Repositories;
 
-public class DrawingRepository : IDrawingRepository
+public class DrawingRepository : IDrawingRepository<DrawingEntity>
 {
     private readonly DatabaseContext _db;
 
@@ -35,26 +36,22 @@ public class DrawingRepository : IDrawingRepository
             .Include(d => d.Description)
             .FirstOrDefaultAsync(d => d.Id == id, cancellationToken);
     }
-
+        
     public async Task<PagedList<DrawingEntity>> GetByParameters(
-        PageParameters pageParameters,
+        SearchParameters parameters,
         CancellationToken cancellationToken)
     {
-        var position = (pageParameters.PageNumber - 1) * pageParameters.PageSize;
-
         var collection = await _db.Drawings
             .AsNoTracking()
             .Include(d => d.Description)
-            .Skip(position)
-            .Take(pageParameters.PageSize)
+            .Skip(parameters.Skip)
+            .Take(parameters.Take)
             .ToListAsync(cancellationToken);
 
-        var drawingCount = await _db.Drawings.CountAsync(cancellationToken);
-        var totalPage = drawingCount % pageParameters.PageSize == 0 ?
-            drawingCount / pageParameters.PageSize :
-            (drawingCount / pageParameters.PageSize) + 1;
+        var totalPages = await _db.Drawings
+            .AsNoTracking().CountAsync(cancellationToken);
 
-        return new PagedList<DrawingEntity>(collection, totalPage);
+        return new PagedList<DrawingEntity>(collection, totalPages);
     }
 
     public async Task<IEnumerable<DrawingEntity>> GetAll(CancellationToken cancellationToken)

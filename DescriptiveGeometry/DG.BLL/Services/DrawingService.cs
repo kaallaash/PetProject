@@ -2,18 +2,19 @@
 using DG.BLL.Exceptions;
 using DG.BLL.Interfaces;
 using DG.BLL.Models;
+using DG.Core.Models;
 using DG.DAL.Entities;
 using DG.DAL.Interfaces.Repositories;
 
 namespace DG.BLL.Services;
 
-public class DrawingService : IDrawingService
+public class DrawingService : IDrawingService<Drawing, int>
 {
-    private readonly IDrawingRepository _drawingRepository;
+    private readonly IDrawingRepository<DrawingEntity> _drawingRepository;
     private readonly IMapper _mapper;
 
     public DrawingService(
-        IDrawingRepository drawingRepository,
+        IDrawingRepository<DrawingEntity> drawingRepository,
         IMapper mapper)
     {
         _drawingRepository = drawingRepository;
@@ -48,14 +49,24 @@ public class DrawingService : IDrawingService
         await _drawingRepository.Delete(drawing, cancellationToken);
     }
 
-    public async Task<Drawing> Get(int id, CancellationToken cancellationToken)
+    public async Task<Drawing?> GetById(int id, CancellationToken cancellationToken)
     {
         var drawing = await _drawingRepository.GetById(id, cancellationToken);
 
         return _mapper.Map<Drawing>(drawing);
     }
 
-    public async Task<List<Drawing>> GetAll(CancellationToken cancellationToken)
+    public async Task<PagedList<Drawing>> GetByParameters(
+        SearchParameters parameters,
+        CancellationToken cancellationToken)
+    {
+        var dalSearchParameters = _mapper.Map<DAL.Models.SearchParameters>(parameters);
+        var dalPagedList = await _drawingRepository.GetByParameters(dalSearchParameters, cancellationToken);
+
+        return _mapper.Map<PagedList<Drawing>>(dalPagedList);
+    }
+
+    public async Task<IEnumerable<Drawing>> GetAll(CancellationToken cancellationToken)
     {
         var drawings = await _drawingRepository.GetAll(cancellationToken);
 

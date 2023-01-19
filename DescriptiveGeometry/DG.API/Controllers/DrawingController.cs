@@ -1,7 +1,9 @@
 using AutoMapper;
 using DG.API.ViewModels;
+using DG.API.Models;
 using DG.BLL.Interfaces;
 using DG.BLL.Models;
+using DG.Core.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +16,12 @@ namespace DG.API.Controllers;
 
 public class DrawingController : Controller
 {
-    private readonly IDrawingService _drawingService;
+    private readonly IDrawingService<Drawing, int> _drawingService;
     private readonly IMapper _mapper;
     private readonly IValidator<ChangeDrawingViewModel> _changeDrawingViewModelValidator;
 
     public DrawingController(
-        IDrawingService drawingService,
+        IDrawingService<Drawing, int> drawingService,
         IMapper mapper,
         IValidator<ChangeDrawingViewModel> changeDrawingViewModelValidator)
     {
@@ -34,9 +36,20 @@ public class DrawingController : Controller
         CancellationToken cancellationToken)
     {
         var drawing = await _drawingService
-            .Get(id, cancellationToken);
+            .GetById(id, cancellationToken);
 
         return _mapper.Map<DrawingViewModel>(drawing);
+    }
+
+    [HttpGet("page")]
+    public async Task<PagedList<DrawingViewModel>> GetByParameters(
+        [FromQuery] QuerySearchParameters querySearchParameters,
+        CancellationToken cancellationToken)
+    {
+        var searchParameters = _mapper.Map<SearchParameters>(querySearchParameters);
+        var pagedList = await _drawingService.GetByParameters(searchParameters, cancellationToken);
+
+        return _mapper.Map<PagedList<DrawingViewModel>>(pagedList);
     }
 
     [HttpGet]

@@ -2,13 +2,16 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using DG.API.ViewModels;
+using DG.Core.Models;
 using DG.DAL.Context;
 using Newtonsoft.Json;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using static DG.API.Tests.Entities.TestDrawingEntity;
 using static DG.API.Tests.ViewModels.TestDrawingViewModel;
+using static DG.API.Tests.Models.TestSearchParametersModel;
 using static DG.API.Tests.Constants.ApiTestsConstants;
+using Shouldly;
 
 namespace DG.API.Tests;
 
@@ -38,6 +41,23 @@ public class DrawingControllerTests
         var responseDrawingViewModels = await client.GetFromJsonAsync<IEnumerable<DrawingViewModel>>(DrawingPath);
 
         Assert.Equal(ValidDrawingEntities.Count(), responseDrawingViewModels?.Count());
+    }
+
+    [Fact]
+    public async Task GetByParameters_ValidSearchParameters_ReturnsPagedList()
+    {
+        await using var application = new DrawingApi();
+        var client = await CreateClient(application);
+
+        var validSearchParameters = GetValidSearchParametersModel;
+
+        var actualPagedList = await client.GetFromJsonAsync<PagedList<DrawingViewModel>>(
+            $"{DrawingPath}/page?PageNumber={validSearchParameters.PageNumber}" +
+            $"&PageSize={validSearchParameters.PageSize}" +
+            $"&SearchPhrase={validSearchParameters.SearchPhrase}");
+
+        actualPagedList?.Collection.ShouldNotBeNull();
+        actualPagedList?.Collection?.Count().ShouldBeLessThanOrEqualTo(validSearchParameters.PageSize);
     }
 
     [Fact]

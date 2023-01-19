@@ -1,21 +1,12 @@
 ﻿using DG.BLL.Models;
+using DG.Core.Models;
+using DG.Core.Services;
 
 namespace DG.BLL.Interfaces;
 
-public interface IDrawingService
+public interface IDrawingService<T1, in T2> : IBaseCrudService<T1, T2>
 {
-    Task<Drawing> Get(int id,
-        CancellationToken cancellationToken);
-    
-    Task<List<Drawing>> GetAll(
-        CancellationToken cancellationToken);
-
-    Task<Drawing> Create(Drawing drawing,
-        CancellationToken cancellationToken);
-
-    Task<Drawing> Update(Drawing drawing,
-        CancellationToken cancellationToken);
-
-    Task Delete(int id,
+    Task<PagedList<Drawing>> GetByParameters(
+        SearchParameters parameters,
         CancellationToken cancellationToken);
 }

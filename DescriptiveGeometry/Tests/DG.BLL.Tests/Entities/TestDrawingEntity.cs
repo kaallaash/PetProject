@@ -5,9 +5,9 @@ namespace DG.BLL.Tests.Entities;
 
 public static class TestDrawingEntity
 {
-    public static DrawingEntity ValidDrawingEntity = DrawingEntityHelper.Create(1);
+    public static DrawingEntity GetValidDrawingEntity => DrawingEntityHelper.Create(1);
 
-    public static IEnumerable<DrawingEntity> ValidDrawingEntities = new List<DrawingEntity>()
+    public static IEnumerable<DrawingEntity> GetValidDrawingEntities => new List<DrawingEntity>()
     {
         DrawingEntityHelper.Create(1),
         DrawingEntityHelper.Create(2),
