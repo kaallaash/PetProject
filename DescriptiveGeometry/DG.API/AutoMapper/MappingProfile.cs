@@ -14,8 +14,8 @@ public class MappingProfile : Profile
         CreateMap<ChangeDrawingViewModel, Drawing>().ReverseMap();
         CreateMap<DrawingDescriptionViewModel, DrawingDescription>().ReverseMap();
         CreateMap<QuerySearchParameters, SearchParameters>()
-            .ForMember("PageInfo", opt =>
-                opt.MapFrom(p => new PageInfo(p.PageNumber, p.PageSize)));
+            .ForMember(sp => sp.PageInfo, opt =>
+                opt.MapFrom(qsp => new PageInfo(qsp.PageNumber, qsp.PageSize)));
         CreateMap<PagedList<Drawing>, PagedList<DrawingViewModel>>().ReverseMap();
     }
 }

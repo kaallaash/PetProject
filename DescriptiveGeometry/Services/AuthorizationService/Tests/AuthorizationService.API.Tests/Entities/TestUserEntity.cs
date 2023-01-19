@@ -5,7 +5,7 @@ namespace AuthorizationService.API.Tests.Entities;
 
 public static class TestUserEntity
 {
-    public static IEnumerable<UserEntity> ValidUserEntities = new List<UserEntity>()
+    public static IEnumerable<UserEntity> GetValidUserEntities => new List<UserEntity>()
     {
         UserEntityHelper.Create(1),
         UserEntityHelper.Create(2),

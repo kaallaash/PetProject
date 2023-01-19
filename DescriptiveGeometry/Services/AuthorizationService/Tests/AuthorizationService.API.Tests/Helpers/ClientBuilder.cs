@@ -14,7 +14,7 @@ internal static class ClientBuilder
             await using var dbContext = provider.GetRequiredService<DatabaseContext>();
             await dbContext.Database.EnsureCreatedAsync();
 
-            await dbContext.Users.AddRangeAsync(ValidUserEntities);
+            await dbContext.Users.AddRangeAsync(GetValidUserEntities);
             await dbContext.SaveChangesAsync();
         }
 

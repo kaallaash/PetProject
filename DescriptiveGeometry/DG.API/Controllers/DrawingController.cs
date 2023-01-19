@@ -59,7 +59,7 @@ public class DrawingController : Controller
         var drawings = await _drawingService
             .GetAll(cancellationToken);
 
-        return _mapper.Map<IEnumerable<DrawingViewModel>>(drawings); ;
+        return _mapper.Map<IEnumerable<DrawingViewModel>>(drawings);
     }
 
     [HttpPost]

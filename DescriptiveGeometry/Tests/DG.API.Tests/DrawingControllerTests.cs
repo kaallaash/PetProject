@@ -23,7 +23,7 @@ public class DrawingControllerTests
         await using var application = new DrawingApi();
         var client = await CreateClient(application);
 
-        foreach (var validDrawingEntity in ValidDrawingEntities )
+        foreach (var validDrawingEntity in GetValidDrawingEntities )
         {
             var responseDrawingViewModel =
                 await client.GetFromJsonAsync<DrawingViewModel>($"{DrawingPath}/{validDrawingEntity.Id}");
@@ -40,7 +40,7 @@ public class DrawingControllerTests
 
         var responseDrawingViewModels = await client.GetFromJsonAsync<IEnumerable<DrawingViewModel>>(DrawingPath);
 
-        Assert.Equal(ValidDrawingEntities.Count(), responseDrawingViewModels?.Count());
+        Assert.Equal(GetValidDrawingEntities.Count(), responseDrawingViewModels?.Count());
     }
 
     [Fact]
@@ -66,14 +66,15 @@ public class DrawingControllerTests
         await using var application = new DrawingApi();
         var client = await CreateClient(application);
 
-        var jsonDrawingViewModel = JsonConvert.SerializeObject(ValidCreateDrawingViewModel);
+        var validCreateDrawingViewModel = GetValidCreateDrawingViewModel;
+        var jsonDrawingViewModel = JsonConvert.SerializeObject(validCreateDrawingViewModel);
         var contentDrawingViewModel = new StringContent(jsonDrawingViewModel, Encoding.UTF8, "application/json");
 
         var response = await client.PostAsync(DrawingPath, contentDrawingViewModel);
         var responseDrawingViewModel = await response.Content.ReadAsAsync<DrawingViewModel>();
 
         Assert.Equal( HttpStatusCode.OK, response.StatusCode);
-        Assert.Equal(ValidCreateDrawingViewModel.DrawingPhotoLink, responseDrawingViewModel?.DrawingPhotoLink);
+        Assert.Equal(validCreateDrawingViewModel.DrawingPhotoLink, responseDrawingViewModel?.DrawingPhotoLink);
     }
 
     [Fact]
@@ -82,13 +83,13 @@ public class DrawingControllerTests
         await using var application = new DrawingApi();
         var client = await CreateClient(application);
 
-        var updateDrawingViewModel = ValidChangeDrawingViewModel;
+        var updateDrawingViewModel = GetValidChangeDrawingViewModel;
         updateDrawingViewModel.DrawingPhotoLink += "Update";
 
         var jsonDrawingViewModel = JsonConvert.SerializeObject(updateDrawingViewModel);
         var contentDrawingViewModel = new StringContent(jsonDrawingViewModel, Encoding.UTF8, "application/json");
 
-        var response = await client.PutAsync($"{DrawingPath}/{ValidDrawingViewModel.Id}", contentDrawingViewModel);
+        var response = await client.PutAsync($"{DrawingPath}/{GetValidDrawingViewModel.Id}", contentDrawingViewModel);
         var responseDrawingViewModel = await response.Content.ReadAsAsync<DrawingViewModel>();
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -101,11 +102,11 @@ public class DrawingControllerTests
         await using var application = new DrawingApi();
         var client = await CreateClient(application);
 
-        var responseDelete = await client.DeleteAsync($"{DrawingPath}/{ValidDrawingViewModel.Id}");
+        var responseDelete = await client.DeleteAsync($"{DrawingPath}/{GetValidDrawingViewModel.Id}");
         var responseDrawingViewModels = await client.GetFromJsonAsync<IEnumerable<DrawingViewModel>>(DrawingPath);
 
         Assert.Equal(HttpStatusCode.OK, responseDelete.StatusCode);
-        Assert.Equal(ValidDrawingEntities.Count() - 1, responseDrawingViewModels?.Count());
+        Assert.Equal(GetValidDrawingEntities.Count() - 1, responseDrawingViewModels?.Count());
     }
 
     private static async Task<HttpClient> CreateClient(DrawingApi application)
@@ -116,7 +117,7 @@ public class DrawingControllerTests
             await using var dbContext = provider.GetRequiredService<DatabaseContext>();
             await dbContext.Database.EnsureCreatedAsync();
 
-            await dbContext.Drawings.AddRangeAsync(ValidDrawingEntities);
+            await dbContext.Drawings.AddRangeAsync(GetValidDrawingEntities);
             await dbContext.SaveChangesAsync();
         }
 

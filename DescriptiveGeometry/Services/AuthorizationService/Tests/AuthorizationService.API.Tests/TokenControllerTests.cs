@@ -17,7 +17,7 @@ public class TokenControllerTests
         await using var application = new AuthorizationApi();
         var client = await CreateClient(application);
 
-        foreach (var validUserEntity in ValidUserEntities)
+        foreach (var validUserEntity in GetValidUserEntities)
         {
             var validLoginViewModel = new LoginViewModel()
             {

@@ -19,7 +19,7 @@ public class UserControllerTests
         await using var application = new AuthorizationApi();
         var client = await CreateClient(application);
 
-        foreach (var validUserEntity in ValidUserEntities )
+        foreach (var validUserEntity in GetValidUserEntities )
         {
             var responseUserViewModel =
                 await client.GetFromJsonAsync<UserViewModel>($"{UserPath}/{validUserEntity.Id}");
@@ -38,7 +38,7 @@ public class UserControllerTests
 
         var responseUserViewModels = await client.GetFromJsonAsync<IEnumerable<UserViewModel>>(UserPath);
 
-        Assert.Equal(ValidUserEntities.Count(), responseUserViewModels?.Count());
+        Assert.Equal(GetValidUserEntities.Count(), responseUserViewModels?.Count());
     }
 
     [Fact]
@@ -47,14 +47,15 @@ public class UserControllerTests
         await using var application = new AuthorizationApi();
         var client = await CreateClient(application);
 
-        var jsonUserViewModel = JsonConvert.SerializeObject(ValidCreatedUserViewModel);
+        var validCreatedUserViewModel = GetValidCreatedUserViewModel;
+        var jsonUserViewModel = JsonConvert.SerializeObject(validCreatedUserViewModel);
         var contentUserViewModel = new StringContent(jsonUserViewModel, Encoding.UTF8, "application/json");
 
         var response = await client.PostAsync(UserPath, contentUserViewModel);
         var responseUserViewModel = await response.Content.ReadAsAsync<UserViewModel>();
 
         Assert.Equal( HttpStatusCode.OK, response.StatusCode);
-        Assert.Equal(ValidCreatedUserViewModel.Email, responseUserViewModel?.Email);
+        Assert.Equal(validCreatedUserViewModel.Email, responseUserViewModel?.Email);
     }
 
     [Fact]
@@ -63,13 +64,13 @@ public class UserControllerTests
         await using var application = new AuthorizationApi();
         var client = await CreateClient(application);
 
-        var updateUserViewModel = ValidUpdatedUserViewModel;
+        var updateUserViewModel = GetValidUpdatedUserViewModel;
         updateUserViewModel.Email += "Updated";
 
         var jsonUserViewModel = JsonConvert.SerializeObject(updateUserViewModel);
         var contentUserViewModel = new StringContent(jsonUserViewModel, Encoding.UTF8, "application/json");
-
-        var response = await client.PutAsync($"{UserPath}/{ValidUserViewModel.Id}", contentUserViewModel);
+        
+        var response = await client.PutAsync($"{UserPath}/{GetValidUserViewModel.Id}", contentUserViewModel);
         var responseUserViewModel = await response.Content.ReadAsAsync<UserViewModel>();
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -82,10 +83,10 @@ public class UserControllerTests
         await using var application = new AuthorizationApi();
         var client = await CreateClient(application);
 
-        var responseDelete = await client.DeleteAsync($"{UserPath}/{ValidUserViewModel.Id}");
+        var responseDelete = await client.DeleteAsync($"{UserPath}/{GetValidUserViewModel.Id}");
         var responseUserViewModels = await client.GetFromJsonAsync<IEnumerable<UserViewModel>>(UserPath);
 
         Assert.Equal(HttpStatusCode.OK, responseDelete.StatusCode);
-        Assert.Equal(ValidUserEntities.Count() - 1, responseUserViewModels?.Count());
+        Assert.Equal(GetValidUserEntities.Count() - 1, responseUserViewModels?.Count());
     }
 }

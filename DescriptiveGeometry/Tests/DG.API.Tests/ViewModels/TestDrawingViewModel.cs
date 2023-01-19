@@ -5,11 +5,15 @@ namespace DG.API.Tests.ViewModels;
 
 public static class TestDrawingViewModel
 {
-    public static ChangeDrawingViewModel ValidChangeDrawingViewModel = DrawingModelHelper.CreateChangeDrawingViewModel(1);
-    public static DrawingViewModel ValidDrawingViewModel = DrawingModelHelper.CreateDrawingViewModel(1);
-    public static DrawingViewModel ValidCreateDrawingViewModel = DrawingModelHelper.CreateDrawingViewModel(6);
+    public static ChangeDrawingViewModel GetValidChangeDrawingViewModel =>
+        DrawingModelHelper.CreateChangeDrawingViewModel(1);
+    public static DrawingViewModel GetValidDrawingViewModel => 
+        DrawingModelHelper.CreateDrawingViewModel(1);
+    public static DrawingViewModel GetValidCreateDrawingViewModel =>
+        DrawingModelHelper.CreateDrawingViewModel(6);
 
-    public static IEnumerable<ChangeDrawingViewModel> ValidChangeDrawingViewModels = new List<ChangeDrawingViewModel>()
+    public static IEnumerable<ChangeDrawingViewModel> GetValidChangeDrawingViewModels =>
+        new List<ChangeDrawingViewModel>()
     {
         DrawingModelHelper.CreateChangeDrawingViewModel(1),
         DrawingModelHelper.CreateChangeDrawingViewModel(2),
@@ -18,7 +22,8 @@ public static class TestDrawingViewModel
         DrawingModelHelper.CreateChangeDrawingViewModel(5)
     };
 
-    public static IEnumerable<DrawingViewModel> ValidDrawingViewModels = new List<DrawingViewModel>()
+    public static IEnumerable<DrawingViewModel> GetValidDrawingViewModels =>
+        new List<DrawingViewModel>()
     {
         DrawingModelHelper.CreateDrawingViewModel(1),
         DrawingModelHelper.CreateDrawingViewModel(2),

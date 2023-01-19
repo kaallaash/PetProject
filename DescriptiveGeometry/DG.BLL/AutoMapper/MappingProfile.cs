@@ -12,10 +12,10 @@ public class MappingProfile : Profile
         CreateMap<DrawingEntity, Drawing>().ReverseMap();
         CreateMap<DrawingDescriptionEntity, DrawingDescription>().ReverseMap();
         CreateMap<SearchParameters, DG.DAL.Models.SearchParameters>()
-        .ForMember("Skip", opt =>
-        opt.MapFrom(s => (s.PageInfo.PageNumber - 1) * s.PageInfo.PageSize))
-        .ForMember("Take", opt =>
-            opt.MapFrom(s => s.PageInfo.PageSize));
+            .ForMember(dalSp => dalSp.Skip, opt =>
+        opt.MapFrom(sp => (sp.PageInfo.PageNumber - 1) * sp.PageInfo.PageSize))
+        .ForMember(dalSp => dalSp.Take, opt =>
+            opt.MapFrom(sp => sp.PageInfo.PageSize));
         CreateMap<PagedList<DrawingEntity>, PagedList<Drawing>>().ReverseMap();
     }
 }
