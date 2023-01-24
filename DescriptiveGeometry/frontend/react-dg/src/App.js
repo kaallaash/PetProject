@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
 import Constants from "./utilities/Constants";
+import LoginForm from "./Components/LoginForm";
+import RegisterForm from "./Components/RegisterForm";
 import DrawingCreateForm from "./Components/DrawingCreateForm";
 import DrawingUpdateForm from "./Components/DrawingUpdateForm";
 
@@ -16,6 +18,9 @@ export default function App() {
   const [pagedList, setPagedList] = useState(initialPagedList);
   const [showingLoginForm, setShowingLoginForm] = useState(false);
   const [showingRegisterForm, setShowingRegisterForm] = useState(false);
+  const [drawings, setDrawings] = useState([]);
+  const [showingLoginForm, setShowingLoginForm] = useState(false);
+  const [showingRegisterForm, setShowingRegisterForm] = useState(false);
   const [showingCreateNewDrawingForm, setShowingCreateNewDrawingForm] = useState(false);
   const [drawingCurrentlyBeingUpdated, setDrawingCurrentlyBeingUpdated] = useState(null);
 
@@ -24,7 +29,10 @@ export default function App() {
     `?pagesize=${pagedParameters.pageSize}&pagenumber=${pagedParameters.pageNumber}`;
 
     fetch(url, {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        'Authorization': sessionStorage.getItem('Authorization'),
+      },
     })
       .then(response => response.json())
       .then(pagedListromServer => {
@@ -40,10 +48,11 @@ export default function App() {
   function deleteDrawing(drawingId){
     const url = Constants.API_URL_DELETE_DRAWING + `/${drawingId}`;
 
-    alert(`we are here`);
-
     fetch(url, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        'Authorization': sessionStorage.getItem('Authorization'),
+      },
     })
       .then(response => {
         if (response.status === 200)
@@ -58,14 +67,15 @@ export default function App() {
       })
   }
 
-  return (
+  return (  
     <div className="container">
       <div className="row min-vh-100">
         <div className="col d-flex flex-column justify-content-center align-items-center">
-          {(showingCreateNewDrawingForm === false && drawingCurrentlyBeingUpdated === null) && (
+          {(showingLoginForm === false
+           && showingRegisterForm === false
+           && showingCreateNewDrawingForm === false
+           && drawingCurrentlyBeingUpdated === null) && (
             <div>
-              <h1> ASP.NET Core React Tutorial</h1>
-
               <div className="mt-5">
                 {
                   ((sessionStorage.getItem('Authorization') !== null)
@@ -118,7 +128,7 @@ export default function App() {
               onDrawingUpdated={onDrawingUpdated} />}
         </div>
       </div>
-    </div>
+    </div>  
   );
 
   function RenderPagedList() {

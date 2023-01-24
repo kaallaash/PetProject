@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AuthorizationService.API.Controllers;
 
-[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class UserController : Controller
@@ -23,6 +22,7 @@ public class UserController : Controller
         _mapper = mapper;
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<UserViewModel> Get(
         int id,
@@ -34,6 +34,7 @@ public class UserController : Controller
         return _mapper.Map<UserViewModel>(user);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IEnumerable<UserViewModel>> GetAll(
         CancellationToken cancellationToken)
@@ -57,6 +58,7 @@ public class UserController : Controller
         return _mapper.Map<UserViewModel>(user);
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<UserViewModel> Update(
         int id,
@@ -72,6 +74,7 @@ public class UserController : Controller
         return _mapper.Map<UserViewModel>(result);
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public Task Delete(
         int id,
