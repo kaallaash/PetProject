@@ -6,7 +6,7 @@ export default function LoginForm(props) {
   
   const initialFormData = Object.freeze({
     email: "Email",
-    password : "Password"
+    password : ""
   }); 
 
   const [formData, setFormData] = useState(initialFormData);

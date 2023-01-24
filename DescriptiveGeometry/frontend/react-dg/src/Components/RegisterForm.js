@@ -7,7 +7,7 @@ export default function RegisterForm(props) {
   const initialFormData = Object.freeze({
     userName: "Name",
     email: "Email",
-    password : "Password",
+    password : "",
     confirmPassword : "Confirm Password"
   }); 
 
