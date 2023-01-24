@@ -36,7 +36,8 @@ export default function DrawingUpdateForm(props) {
     fetch(url, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': sessionStorage.getItem('Authorization'),
       },
       body: JSON.stringify(drawingToUpdate)
     })

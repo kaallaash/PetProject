@@ -36,12 +36,15 @@ export default function DrawingCreateForm(props) {
     fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': sessionStorage.getItem('Authorization'),
       },
       body: JSON.stringify(drawingToCreate)
     })
       .then(response => {
         response.json()
+
+        console.log(sessionStorage.getItem('Bearer'));
 
         if(response.status !== 200)
         {

@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import Constants from "./utilities/Constants";
+import LoginForm from "./Components/LoginForm";
+import RegisterForm from "./Components/RegisterForm";
 import DrawingCreateForm from "./Components/DrawingCreateForm";
 import DrawingUpdateForm from "./Components/DrawingUpdateForm";
 
 export default function App() {
   const [drawings, setDrawings] = useState([]);
+  const [showingLoginForm, setShowingLoginForm] = useState(false);
+  const [showingRegisterForm, setShowingRegisterForm] = useState(false);
   const [showingCreateNewDrawingForm, setShowingCreateNewDrawingForm] = useState(false);
   const [drawingCurrentlyBeingUpdated, setDrawingCurrentlyBeingUpdated] = useState(null);
 
@@ -12,7 +16,10 @@ export default function App() {
     const url = Constants.API_URL_GET_ALL_DRAWINGS;
 
     fetch(url, {
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        'Authorization': sessionStorage.getItem('Authorization'),
+      },
     })
       .then(response => response.json())
       .then(drawingFromServer => {
@@ -28,10 +35,11 @@ export default function App() {
   function deleteDrawing(drawingId){
     const url = Constants.API_URL_DELETE_DRAWING + `/${drawingId}`;
 
-    alert(`we are here`);
-
     fetch(url, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        'Authorization': sessionStorage.getItem('Authorization'),
+      },
     })
       .then(response => response.json())
       .then(drawingFromServer => {
@@ -44,15 +52,39 @@ export default function App() {
       })
   }
 
-  return (
+  return (  
     <div className="container">
       <div className="row min-vh-100">
         <div className="col d-flex flex-column justify-content-center align-items-center">
-          {(showingCreateNewDrawingForm === false && drawingCurrentlyBeingUpdated === null) && (
+          {(showingLoginForm === false
+           && showingRegisterForm === false
+           && showingCreateNewDrawingForm === false
+           && drawingCurrentlyBeingUpdated === null) && (
             <div>
-              <h1> ASP.NET Core React Tutorial</h1>
-
               <div className="mt-5">
+                {
+                  ((sessionStorage.getItem('Authorization') !== null)
+                  && (
+                    <button onClick={
+                      () => {
+                        if (window.confirm(`Are you sure you want to logOut?`)){
+                          onLogout();}
+                      }
+                    } 
+                    className="btn btn-secondary btn-lg w-100 mt-4">
+                      LogOut
+                    </button>
+                  ))
+                  ||(
+                    <div>
+                    <button onClick={() => setShowingLoginForm(true)} className="btn btn-secondary btn-lg w-100 mt-4">
+                      LogIn
+                    </button>
+                    <button onClick={() => setShowingRegisterForm(true)} className="btn btn-secondary btn-lg w-100 mt-4">
+                      Register
+                    </button>
+                    </div>)
+                }
                 <button onClick={getDrawings} className="btn btn-dark btn-lg w-100">
                   Get Drawings from server
                 </button>
@@ -64,8 +96,15 @@ export default function App() {
           )}
 
           {(drawings.length > 0
-            && showingCreateNewDrawingForm === false
-            && drawingCurrentlyBeingUpdated === null) && renderDrawingsTable()}
+            && showingLoginForm === false
+            && showingRegisterForm === false
+            && showingCreateNewDrawingForm === false            
+            && drawingCurrentlyBeingUpdated === null) 
+            && renderDrawingsTable()}
+
+          {showingLoginForm && <LoginForm onLogin={onLogin} />}
+
+          {showingRegisterForm && <RegisterForm onRegister={onRegister} />}
 
           {showingCreateNewDrawingForm && <DrawingCreateForm onDrawingCreated={onDrawingCreated} />}
 
@@ -74,7 +113,7 @@ export default function App() {
               onDrawingUpdated={onDrawingUpdated} />}
         </div>
       </div>
-    </div>
+    </div>  
   );
 
   function renderDrawingsTable() {
@@ -113,10 +152,43 @@ export default function App() {
         </table>
 
         <button onClick={() => setDrawings([])} className="btn btn-dark btn-lf w-100">
-          Empty React drawings array
+          Empty drawings array
         </button>
       </div>
     )
+  }
+
+  function SetDefaultParameters(){
+    setDrawings([]);
+    setShowingLoginForm(false);
+    setShowingRegisterForm(false);
+    setShowingCreateNewDrawingForm(false);
+    setDrawingCurrentlyBeingUpdated(null);
+  }
+
+  function onLogin(token) {
+    setShowingLoginForm(false);
+
+    if (token !== null) {
+      alert(`We've gotten a token`);
+    }
+    
+    getDrawings();
+  }
+
+  function onLogout() {
+    sessionStorage.clear();
+    SetDefaultParameters();    
+  }
+
+  function onRegister(name) {
+    setShowingRegisterForm(false);
+
+    if (name !== null) {
+      alert(`Hello ${name}`);
+    }
+    
+    getDrawings();
   }
 
   function onDrawingCreated(createdDrawing) {
