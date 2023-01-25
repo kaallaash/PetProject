@@ -1,23 +1,36 @@
 import React, { useState } from "react";
+import styles from './CSS/style.css';
 import Constants from "./utilities/Constants";
 import DrawingCreateForm from "./Components/DrawingCreateForm";
 import DrawingUpdateForm from "./Components/DrawingUpdateForm";
 
 export default function App() {
-  const [drawings, setDrawings] = useState([]);
+
+  const initialPagedList = {
+    collection: [],
+    totalPages: 0,
+  }
+  const initialPagedParameters = {
+    page: 1,
+    count: 5,
+  }
+  const [pagedList, setPagedList] = useState(initialPagedList);
+  const [pagedParameters, setPagedParameters] = useState(initialPagedList.totalPages);
+  const [showingLoginForm, setShowingLoginForm] = useState(false);
+  const [showingRegisterForm, setShowingRegisterForm] = useState(false);
   const [showingCreateNewDrawingForm, setShowingCreateNewDrawingForm] = useState(false);
   const [drawingCurrentlyBeingUpdated, setDrawingCurrentlyBeingUpdated] = useState(null);
 
-  function getDrawings() {
-    const url = Constants.API_URL_GET_ALL_DRAWINGS;
+  function getPagedList() {
+    const url = Constants.API_URL_GET_DRAWING_BY_PARAMETERS;
 
     fetch(url, {
       method: 'GET'
     })
       .then(response => response.json())
-      .then(drawingFromServer => {
-        console.log(drawingFromServer);
-        setDrawings(drawingFromServer);
+      .then(pagedListromServer => {
+        console.log(pagedListromServer);
+        setPagedList(pagedListromServer);
       })
       .catch((error) => {
         console.log(error);
@@ -53,7 +66,30 @@ export default function App() {
               <h1> ASP.NET Core React Tutorial</h1>
 
               <div className="mt-5">
-                <button onClick={getDrawings} className="btn btn-dark btn-lg w-100">
+                {
+                  ((sessionStorage.getItem('Authorization') !== null)
+                  && (
+                    <button onClick={
+                      () => {
+                        if (window.confirm(`Are you sure you want to logOut?`)){
+                          onLogout();}
+                      }
+                    } 
+                    className="btn btn-secondary btn-lg w-100 mt-4">
+                      LogOut
+                    </button>
+                  ))
+                  ||(
+                    <div>
+                    <button onClick={() => setShowingLoginForm(true)} className="btn btn-secondary btn-lg w-100 mt-4">
+                      LogIn
+                    </button>
+                    <button onClick={() => setShowingRegisterForm(true)} className="btn btn-secondary btn-lg w-100 mt-4">
+                      Register
+                    </button>
+                    </div>)
+                }
+                <button onClick={getPagedList} className="btn btn-dark btn-lg w-100">
                   Get Drawings from server
                 </button>
                 <button onClick={() => setShowingCreateNewDrawingForm(true)} className="btn btn-secondary btn-lg w-100 mt-4">
@@ -63,9 +99,16 @@ export default function App() {
             </div>
           )}
 
-          {(drawings.length > 0
-            && showingCreateNewDrawingForm === false
-            && drawingCurrentlyBeingUpdated === null) && renderDrawingsTable()}
+          {(pagedList.collection.length > 0
+            && showingLoginForm === false
+            && showingRegisterForm === false
+            && showingCreateNewDrawingForm === false            
+            && drawingCurrentlyBeingUpdated === null) 
+            && renderDrawingsTable()}
+
+          {showingLoginForm && <LoginForm onLogin={onLogin} />}
+
+          {showingRegisterForm && <RegisterForm onRegister={onRegister} />}
 
           {showingCreateNewDrawingForm && <DrawingCreateForm onDrawingCreated={onDrawingCreated} />}
 
@@ -92,7 +135,7 @@ export default function App() {
             </tr>
           </thead>
           <tbody>
-            {drawings.map((drawing) => (
+            {pagedList.collection.map((drawing) => (
               <tr>
                 <td scope="row">{drawing.id}</td>
                 <td>{drawing.description.text}</td>
@@ -112,11 +155,53 @@ export default function App() {
           </tbody>
         </table>
 
-        <button onClick={() => setDrawings([])} className="btn btn-dark btn-lf w-100">
-          Empty React drawings array
+        {
+          GetEachPage(pagedList.totalPages).map((page) => (
+            <button className="btn btn-dark btn-lg mx-1 my-3" onClick="">{page}</button>))
+        }
+
+        <button onClick={() => setPagedList([])} className="btn btn-dark btn-lf w-100">
+          Empty drawings array
         </button>
       </div>
     )
+  }
+
+  function GetEachPage(totalPages){
+    return Array.from(Array(totalPages), (_, index) => index + 1);
+  }
+
+  function SetDefaultParameters(){
+    setPagedList(initialPagedList);
+    setShowingLoginForm(false);
+    setShowingRegisterForm(false);
+    setShowingCreateNewDrawingForm(false);
+    setDrawingCurrentlyBeingUpdated(null);
+  }
+
+  function onLogin(token) {
+    setShowingLoginForm(false);
+
+    if (token !== null) {
+      alert(`We've gotten a token`);
+    }
+    
+    getPagedList();
+  }
+
+  function onLogout() {
+    sessionStorage.clear();
+    SetDefaultParameters();    
+  }
+
+  function onRegister(name) {
+    setShowingRegisterForm(false);
+
+    if (name !== null) {
+      alert(`Hello ${name}`);
+    }
+    
+    getPagedList();
   }
 
   function onDrawingCreated(createdDrawing) {
@@ -130,47 +215,47 @@ export default function App() {
       alert(`Drawing isn't created`);
     }
     
-    getDrawings();
+    getPagedList();
   }
 
   function onDrawingUpdated(updatedDrawing) {
     setDrawingCurrentlyBeingUpdated(null);
 
-    if (updatedDrawing === null) {
-      return;
-    }
+    // if (updatedDrawing === null) {
+    //   return;
+    // }
 
-    let drawingsCopy = [...drawings];
+    // let drawingsCopy = [...drawings];
 
-    const index = drawingsCopy.findIndex((drawingsCopyDrawing, currentIndex) => {
-      if (drawingsCopyDrawing.id === updatedDrawing.id) {
-        return true;
-      }
-    });
+    // const index = drawingsCopy.findIndex((drawingsCopyDrawing, currentIndex) => {
+    //   if (drawingsCopyDrawing.id === updatedDrawing.id) {
+    //     return true;
+    //   }
+    // });
 
-    if (index !== -1) {
-      drawingsCopy[index] = updatedDrawing;
-    }
+    // if (index !== -1) {
+    //   drawingsCopy[index] = updatedDrawing;
+    // }
 
-    setDrawings(drawingsCopy);
+    //setDrawings(drawingsCopy);
 
     alert(`Drawing successfully updated`);
   }
   
   function onDrawingDeleted(deletedDrawingId) {
-    let drawingsCopy = [...drawings];
+    // let drawingsCopy = [...drawings];
 
-    const index = drawingsCopy.findIndex((drawingsCopyDrawing, currentIndex) => {
-      if (drawingsCopyDrawing.id === deletedDrawingId) {
-        return true;
-      }
-    });
+    // const index = drawingsCopy.findIndex((drawingsCopyDrawing, currentIndex) => {
+    //   if (drawingsCopyDrawing.id === deletedDrawingId) {
+    //     return true;
+    //   }
+    // });
 
-    if (index !== -1) {
-      drawingsCopy.splice(index, 1);
-    }
+    // if (index !== -1) {
+    //   drawingsCopy.splice(index, 1);
+    // }
 
-    setDrawings(drawingsCopy);
+    //setPagedList(drawingsCopy);
 
     alert(`Drawing successfully deleted`);
   }
