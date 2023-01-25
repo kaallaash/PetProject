@@ -48,8 +48,11 @@ public class DrawingRepository : IDrawingRepository<DrawingEntity>
             .Take(parameters.Take)
             .ToListAsync(cancellationToken);
 
-        var totalPages = await _db.Drawings
+        var drawingCount = await _db.Drawings
             .AsNoTracking().CountAsync(cancellationToken);
+
+        var totalPages = drawingCount % parameters.Take == 0 ?
+            drawingCount / parameters.Take : drawingCount / parameters.Take + 1;
 
         return new PagedList<DrawingEntity>(collection, totalPages);
     }

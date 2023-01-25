@@ -1,3 +1,4 @@
+using DG.Core.Models;
 using DG.DAL.Context;
 using DG.DAL.Entities;
 using DG.DAL.Interfaces.Repositories;
@@ -69,8 +70,12 @@ public class DrawingRepositoryIntegrationTests : IDisposable
             .Take(pageParameters.Take)
             .ToListAsync(default);
 
-        var totalPages = await _context.Drawings
+        var drawingCount = await _context.Drawings
             .AsNoTracking().CountAsync(default);
+
+        var totalPages = drawingCount % pageParameters.Take == 0 ?
+            drawingCount / pageParameters.Take
+            : drawingCount / pageParameters.Take + 1;
 
         var actualPagedList =
             await _drawingRepository.GetByParameters(pageParameters, default);
