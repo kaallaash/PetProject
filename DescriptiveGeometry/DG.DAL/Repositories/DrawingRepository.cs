@@ -58,6 +58,11 @@ public class DrawingRepository : IDrawingRepository<DrawingEntity>
             totalPages += 1;
         }
 
+        if (IsRemainderEqualsZero(drawingCount, parameters.Take))
+        {
+            totalPages += 1;
+        }
+
         return new PagedList<DrawingEntity>(collection, totalPages);
     }
 
