@@ -1,3 +1,4 @@
+using DG.Core.Models;
 using DG.DAL.Context;
 using DG.DAL.Entities;
 using DG.DAL.Interfaces.Repositories;
