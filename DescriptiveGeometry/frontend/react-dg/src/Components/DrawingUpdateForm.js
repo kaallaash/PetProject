@@ -3,11 +3,17 @@ import Constants from '../utilities/Constants'
 
 export default function DrawingUpdateForm(props) {
 
+  // const initialFormData = Object.freeze({
+  //   drawingPhotoLink: props.drawing.drawingPhotoLink,
+  //   descriptionText: props.drawing.description.text,
+  //   descriptionPoints: props.drawing.description.points,
+  //   descriptionPhotoLink: props.drawing.description.descriptionPhotoLink,
+  // });
   const initialFormData = Object.freeze({
-    drawingPhotoLink: props.drawing.drawingPhotoLink,
-    descriptionText: props.drawing.description.text,
-    descriptionPoints: props.drawing.description.points,
-    descriptionPhotoLink: props.drawing.description.descriptionPhotoLink,
+    drawingPhotoLink: "",
+    descriptionText: "",
+    descriptionPoints: "",
+    descriptionPhotoLink: "",
   });
 
   const [formData, setFormData] = useState(initialFormData);
