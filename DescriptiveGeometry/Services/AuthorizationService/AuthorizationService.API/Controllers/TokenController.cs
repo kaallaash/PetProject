@@ -31,13 +31,14 @@ public class TokenController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(LoginViewModel userViewModel)
+    //[Route("login")]
+    public async Task<IActionResult> Login(LoginViewModel loginViewModel)
     {
-        if (userViewModel is not null &&
-            !string.IsNullOrEmpty(userViewModel.Email) && 
-            !string.IsNullOrEmpty(userViewModel.Password))
+        if (loginViewModel is not null &&
+            !string.IsNullOrEmpty(loginViewModel.Email) && 
+            !string.IsNullOrEmpty(loginViewModel.Password))
         {
-            var user = await GetUser(userViewModel.Email, userViewModel.Password);
+            var user = await GetUser(loginViewModel.Email, loginViewModel.Password);
 
             if (user is not null)
             {
@@ -50,6 +51,9 @@ public class TokenController : Controller
 
                 var accessToken = CreateToken(claims);
                 var refreshToken = GenerateRefreshToken();
+
+                //user.RefreshToken = refreshToken;
+                //await _userService.Update(user, default);
 
                 return Ok(
                     new{
@@ -66,16 +70,16 @@ public class TokenController : Controller
 
     //[HttpPost]
     //[Route("login")]
-    //public async Task<IActionResult> Login([FromBody] LoginModel model)
+    //public async Task<IActionResult> Login([FromBody] LoginViewModel loginViewModel)
     //{
-    //    var user = await _userManager.FindByNameAsync(model.Username);
-    //    if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+    //    var user = await _userService.FindByNameAsync(loginViewModel.Email);
+    //    if (user != null && await _userManager.CheckPasswordAsync(user, loginViewModel.Password))
     //    {
     //        var userRoles = await _userManager.GetRolesAsync(user);
 
     //        var authClaims = new List<Claim>
     //        {
-    //            new Claim(ClaimTypes.Name, user.UserName),
+    //            new Claim(ClaimTypes.Email, user.Email),
     //            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
     //        };
 
@@ -121,7 +125,7 @@ public class TokenController : Controller
     //    {
     //        return BadRequest("Invalid access token or refresh token");
     //    }
-        
+
     //    var email = principal?.Identity?.Name;
 
     //    if (email is null)
@@ -149,13 +153,21 @@ public class TokenController : Controller
     //    });
     //}
 
-    private async Task<LoginViewModel?> GetUser(string email, string password)
+    private async Task<User?> GetUser(string email, string password)
     {
         var users = await _userService.GetAll(default);
         var user = users.FirstOrDefault(u => u.Email == email && u.Password == password);
-        
-        return user is not null ? _mapper.Map<LoginViewModel>(user) : null;
+
+        return user;
     }
+
+    //private async Task<UserViewModel?> GetUser(string email, string password)
+    //{
+    //    var users = await _userService.GetAll(default);
+    //    var user = users.FirstOrDefault(u => u.Email == email && u.Password == password);
+        
+    //    return user is not null ? _mapper.Map<UserViewModel>(user) : null;
+    //}
 
     private ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token)
     {
