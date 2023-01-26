@@ -46,13 +46,36 @@ public class TokenControllerTests
 
         foreach (var validUserEntity in GetValidUserEntities)
         {
-            var validLoginViewModel = new LoginViewModel()
+            var loginViewModel = new LoginViewModel()
             {
-                Email = validUserEntity.Email
+                Email = validUserEntity.Email,
+                Password = ""
             };
 
-            var jsonValidLoginViewModel = JsonConvert.SerializeObject(validLoginViewModel);
-            var userViewModelContent = new StringContent(jsonValidLoginViewModel, Encoding.UTF8, "application/json");
+            var jsonLoginViewModel = JsonConvert.SerializeObject(loginViewModel);
+            var userViewModelContent = new StringContent(jsonLoginViewModel, Encoding.UTF8, "application/json");
+            var tokenResponse = await client.PostAsync(TokenPath, userViewModelContent);
+
+            Assert.Equal(HttpStatusCode.BadRequest, tokenResponse.StatusCode);
+        }
+    }
+
+    [Fact]
+    public async Task Login_EmptyEmail_ReturnsBadRequest()
+    {
+        await using var application = new AuthorizationApi();
+        var client = await CreateClient(application);
+
+        foreach (var validUserEntity in GetValidUserEntities)
+        {
+            var loginViewModel = new LoginViewModel()
+            {
+                Email = "",
+                Password = validUserEntity.Password
+            };
+
+            var jsonLoginViewModel = JsonConvert.SerializeObject(loginViewModel);
+            var userViewModelContent = new StringContent(jsonLoginViewModel, Encoding.UTF8, "application/json");
             var tokenResponse = await client.PostAsync(TokenPath, userViewModelContent);
 
             Assert.Equal(HttpStatusCode.BadRequest, tokenResponse.StatusCode);
