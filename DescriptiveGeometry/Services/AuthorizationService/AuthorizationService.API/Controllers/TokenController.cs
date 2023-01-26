@@ -1,10 +1,7 @@
-﻿using System.Diagnostics.Tracing;
-using AuthorizationService.API.Models;
+﻿using AuthorizationService.API.Models;
 using AuthorizationService.API.ViewModels;
 using AuthorizationService.BLL.Interfaces;
 using AuthorizationService.BLL.Models;
-using AutoMapper;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
