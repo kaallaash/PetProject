@@ -39,6 +39,49 @@ public class TokenControllerTests
     }
 
     [Fact]
+    public async Task Login_EmptyPassword_ReturnsBadRequest()
+    {
+        await using var application = new AuthorizationApi();
+        var client = await CreateClient(application);
+
+        foreach (var validUserEntity in GetValidUserEntities)
+        {
+            var validLoginViewModel = new LoginViewModel()
+            {
+                Email = validUserEntity.Email
+            };
+
+            var jsonValidLoginViewModel = JsonConvert.SerializeObject(validLoginViewModel);
+            var userViewModelContent = new StringContent(jsonValidLoginViewModel, Encoding.UTF8, "application/json");
+            var tokenResponse = await client.PostAsync(TokenPath, userViewModelContent);
+
+            Assert.Equal(HttpStatusCode.BadRequest, tokenResponse.StatusCode);
+        }
+    }
+
+    [Fact]
+    public async Task Login_InvalidLoginViewModel_ReturnsBadRequest()
+    {
+        await using var application = new AuthorizationApi();
+        var client = await CreateClient(application);
+
+        foreach (var validUserEntity in GetValidUserEntities)
+        {
+            var validLoginViewModel = new LoginViewModel()
+            {
+                Email = validUserEntity.Email + "randomText",
+                Password = validUserEntity.Email + "randomText"
+            };
+
+            var jsonValidLoginViewModel = JsonConvert.SerializeObject(validLoginViewModel);
+            var userViewModelContent = new StringContent(jsonValidLoginViewModel, Encoding.UTF8, "application/json");
+            var tokenResponse = await client.PostAsync(TokenPath, userViewModelContent);
+
+            Assert.Equal(HttpStatusCode.BadRequest, tokenResponse.StatusCode);
+        }
+    }
+
+    [Fact]
     public async Task RefreshToken_ValidTokenModel_ReturnsToken()
     {
         await using var application = new AuthorizationApi();
