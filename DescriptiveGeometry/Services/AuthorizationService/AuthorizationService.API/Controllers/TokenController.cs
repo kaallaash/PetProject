@@ -50,15 +50,15 @@ public class TokenController : Controller
                     };
 
                 var accessToken = CreateToken(claims);
-                var refreshToken = GenerateRefreshToken();
+                var newRefreshToken = GenerateRefreshToken();
 
-                //user.RefreshToken = refreshToken;
-                //await _userService.Update(user, default);
+                user.RefreshToken = newRefreshToken;
+                await _userService.Update(user, default);
 
                 return Ok(
                     new{
                     AccessToken = new JwtSecurityTokenHandler().WriteToken(accessToken),
-                    RefreshToken = refreshToken
+                    RefreshToken = newRefreshToken
                     });
             }
 
