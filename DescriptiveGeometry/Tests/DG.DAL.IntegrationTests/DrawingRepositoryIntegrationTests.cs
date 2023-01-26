@@ -1,4 +1,3 @@
-using DG.Core.Models;
 using DG.DAL.Context;
 using DG.DAL.Entities;
 using DG.DAL.Interfaces.Repositories;
@@ -73,9 +72,12 @@ public class DrawingRepositoryIntegrationTests : IDisposable
         var drawingCount = await _context.Drawings
             .AsNoTracking().CountAsync(default);
 
-        var totalPages = drawingCount % pageParameters.Take == 0 ?
-            drawingCount / pageParameters.Take
-            : drawingCount / pageParameters.Take + 1;
+        var totalPages = drawingCount / pageParameters.Take;
+
+        if (!IsRemainderEqualsZero(drawingCount, pageParameters.Take))
+        {
+            totalPages += 1;
+        }
 
         var actualPagedList =
             await _drawingRepository.GetByParameters(pageParameters, default);
@@ -184,5 +186,10 @@ public class DrawingRepositoryIntegrationTests : IDisposable
     {
         await context.Drawings.AddRangeAsync(drawingEntities, default);
         await context.SaveChangesAsync();
+    }
+
+    private static bool IsRemainderEqualsZero(int divisible, int divider)
+    {
+        return divisible % divider == 0;
     }
 }

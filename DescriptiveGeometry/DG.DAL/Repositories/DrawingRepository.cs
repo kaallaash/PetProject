@@ -51,8 +51,12 @@ public class DrawingRepository : IDrawingRepository<DrawingEntity>
         var drawingCount = await _db.Drawings
             .AsNoTracking().CountAsync(cancellationToken);
 
-        var totalPages = drawingCount % parameters.Take == 0 ?
-            drawingCount / parameters.Take : drawingCount / parameters.Take + 1;
+        var totalPages = drawingCount / parameters.Take;
+
+        if (!IsRemainderEqualsZero(drawingCount, parameters.Take))
+        {
+            totalPages += 1;
+        }
 
         return new PagedList<DrawingEntity>(collection, totalPages);
     }
@@ -69,15 +73,22 @@ public class DrawingRepository : IDrawingRepository<DrawingEntity>
     {
         _db.Entry(drawing).State = EntityState.Modified;
 
-        if (drawing.Description is not null)
+        var drawingById = await GetById(drawing.Id, cancellationToken);
+
+        if (drawing.Description is not null && drawingById?.Description is not null)
         {
             drawing.Description.DrawingId = drawing.Id;
-            drawing.Description.Id = drawing.Id;
+            drawing.Description.Id = drawingById.Description.Id;
             _db.Entry(drawing.Description).State = EntityState.Modified;
         }
-
+        
         await _db.SaveChangesAsync(cancellationToken);
 
         return drawing;
+    }
+
+    private static bool IsRemainderEqualsZero(int divisible, int divider)
+    {
+        return divisible % divider == 0;
     }
 }
