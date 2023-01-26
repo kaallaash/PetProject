@@ -55,11 +55,11 @@ public class UserService : IUserService<User, int>
         return _mapper.Map<User>(userEntity);
     }
 
-    public async Task<User> GetByEmail(string email, CancellationToken cancellationToken)
+    public async Task<User?> GetByEmail(string email, CancellationToken cancellationToken)
     {
         var userEntity = await _userRepository.GetByEmail(email, cancellationToken);
 
-        return _mapper.Map<User>(userEntity);
+        return _mapper.Map<User?>(userEntity);
     }
 
     public async Task<IEnumerable<User>> GetAll(CancellationToken cancellationToken)
