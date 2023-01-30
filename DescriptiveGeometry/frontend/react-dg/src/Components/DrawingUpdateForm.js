@@ -2,13 +2,7 @@ import React, { useState } from 'react'
 import Constants from '../utilities/Constants'
 
 export default function DrawingUpdateForm(props) {
-
-  // const initialFormData = Object.freeze({
-  //   drawingPhotoLink: props.drawing.drawingPhotoLink,
-  //   descriptionText: props.drawing.description.text,
-  //   descriptionPoints: props.drawing.description.points,
-  //   descriptionPhotoLink: props.drawing.description.descriptionPhotoLink,
-  // });
+  
   const initialFormData = Object.freeze({
     drawingPhotoLink: "",
     descriptionText: "",
@@ -43,7 +37,7 @@ export default function DrawingUpdateForm(props) {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': sessionStorage.getItem('Authorization'),
+        'Authorization': sessionStorage.getItem('AccessToken'),
       },
       body: JSON.stringify(drawingToUpdate)
     })

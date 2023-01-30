@@ -37,7 +37,7 @@ export default function DrawingCreateForm(props) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': sessionStorage.getItem('Authorization'),
+        'Authorization': sessionStorage.getItem('AccessToken'),
       },
       body: JSON.stringify(drawingToCreate)
     })

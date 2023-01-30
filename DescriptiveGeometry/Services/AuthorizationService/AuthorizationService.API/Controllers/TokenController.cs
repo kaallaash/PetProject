@@ -100,8 +100,8 @@ public class TokenController : Controller
         return Ok(
         new
         {
-            accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
-            refreshToken = newRefreshToken,
+            AccessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+            RefreshToken = newRefreshToken,
             ExpiryTime = user.RefreshTokenExpiryTime
         });
     }

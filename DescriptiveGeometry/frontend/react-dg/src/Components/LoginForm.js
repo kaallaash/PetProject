@@ -32,12 +32,14 @@ export default function LoginForm(props) {
     axios.post(url, login)
       .then((response) => {
         setFormData(response.data);
-        sessionStorage.setItem('Authorization', `${tokenType} ${response.data}`);
+        sessionStorage.setItem('AccessToken', `${tokenType} ${response.data.accessToken}`);
+        sessionStorage.setItem('RefreshToken', response.data.refreshToken);
+        sessionStorage.setItem('ExpiryTime', response.data.expiryTime);
         props.onLogin(true);
       })
       .catch((error) => {
             console.log(error);
-            alert("Wrong Login or Password!");
+            alert("Wrong Login or Password! FROM LoginForm");
           });
   }
 

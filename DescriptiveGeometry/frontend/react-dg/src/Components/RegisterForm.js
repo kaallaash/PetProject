@@ -41,7 +41,9 @@ export default function RegisterForm(props) {
 
         axios.post(postLoginUrl, user)
           .then((response) => {
-            sessionStorage.setItem('Authorization', `${tokenType} ${response.data}`);
+            sessionStorage.setItem('AccessToken', `${tokenType} ${response.data.accessToken}`);
+            sessionStorage.setItem('RefreshToken', response.data.refreshToken);
+            sessionStorage.setItem('ExpiryTime', response.data.expiryTime);
             props.onRegister(user.name);
           })
           .catch((error) => {

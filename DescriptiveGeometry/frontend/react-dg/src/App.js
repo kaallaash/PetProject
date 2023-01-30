@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import Constants from "./utilities/Constants";
+import RefreshToken from "./utilities/Functions/RefreshToken";
 import LoginForm from "./Components/LoginForm";
 import RegisterForm from "./Components/RegisterForm";
 import DrawingCreateForm from "./Components/DrawingCreateForm";
@@ -18,30 +19,39 @@ export default function App() {
   const [pagedList, setPagedList] = useState(initialPagedList);
   const [showingLoginForm, setShowingLoginForm] = useState(false);
   const [showingRegisterForm, setShowingRegisterForm] = useState(false);
-  const [drawings, setDrawings] = useState([]);
-  const [showingLoginForm, setShowingLoginForm] = useState(false);
-  const [showingRegisterForm, setShowingRegisterForm] = useState(false);
   const [showingCreateNewDrawingForm, setShowingCreateNewDrawingForm] = useState(false);
   const [drawingCurrentlyBeingUpdated, setDrawingCurrentlyBeingUpdated] = useState(null);
 
-  function getPagedList() {
+  async function getPagedList() {
     const url = Constants.API_URL_GET_DRAWING_BY_PARAMETERS + 
-    `?pagesize=${pagedParameters.pageSize}&pagenumber=${pagedParameters.pageNumber}`;
+    `?pagesize=${pagedParameters.pageSize}&pagenumber=${pagedParameters.pageNumber}`;   
 
-    fetch(url, {
+    const fetchFunc = async function(accessToken) { 
+      return await fetch(url, {
       method: 'GET',
       headers: {
-        'Authorization': sessionStorage.getItem('Authorization'),
-      },
-    })
-      .then(response => response.json())
+        'Authorization': accessToken,
+        },
+      });
+    }
+
+  await fetchFunc(sessionStorage.getItem('AccessToken'))
+      .then(async (response) => {
+        if (response.status === 401){          
+          await RefreshToken();
+          alert('we are in the response block of GetPageList')
+          return await fetchFunc(sessionStorage.getItem('AccessToken')).then(response => response.json());        
+        }
+
+        return response.json()
+      })
       .then(pagedListromServer => {
         console.log(pagedListromServer);
-        setPagedList(pagedListromServer);
+        setPagedList(pagedListromServer);        
       })
       .catch((error) => {
         console.log(error);
-        alert(error);
+        console.log('we are In error block of GetPagedList');
       })
   }
 
@@ -51,7 +61,7 @@ export default function App() {
     fetch(url, {
       method: 'DELETE',
       headers: {
-        'Authorization': sessionStorage.getItem('Authorization'),
+        'Authorization': sessionStorage.getItem('AccessToken'),
       },
     })
       .then(response => {
@@ -78,7 +88,7 @@ export default function App() {
             <div>
               <div className="mt-5">
                 {
-                  ((sessionStorage.getItem('Authorization') !== null)
+                  ((sessionStorage.getItem('AccessToken') !== null)
                   && (
                     <button onClick={
                       () => {
