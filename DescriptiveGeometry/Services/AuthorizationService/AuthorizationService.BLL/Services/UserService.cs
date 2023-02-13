@@ -78,9 +78,9 @@ public class UserService : IUserService<User, int>
             throw new NotFoundException("The user is not found");
         }
 
-        var drawingEntities = await _userRepository.GetAll(cancellationToken);
+        var userEntities = await _userRepository.GetAll(cancellationToken);
 
-        var result = drawingEntities.Any(u =>
+        var result = userEntities.Any(u =>
             u?.Email == user?.Email
             && u?.Id != user?.Id);
 
